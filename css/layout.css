@@ -1,0 +1,72 @@
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body { 
+	margin:0;
+	padding:0;
+	perspective: 1px;
+	transform-style: preserve-3d;
+	height: 100%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	font-family: Optima,Segoe,Segoe UI,Candara,Calibri,Arial,sans-serif;
+}
+
+table {
+	margin: 0 auto;
+	/*border: 1px solid black;*/
+}
+
+td {
+	width:30%;
+	height:300px;
+	margin: 0 auto;
+	border: 1px solid black;
+	text-align: center;
+}
+
+h1 {
+   font-size: 250%
+}
+
+p {
+  font-size: 140%;
+  line-height: 150%;
+  color: #333;
+}
+
+td img {
+	position: relative;
+	padding:10px;
+	width:180px;
+	height:180px;
+	border-radius: 40px;
+}
+
+td img:hover {
+	padding:0px;
+	width: 200px;
+	height: 200px;
+}
+
+#header {
+	text-align: center;
+	height: 15%;
+}
+
+#content {
+	text-align: center;
+	height: 20%;
+}
+
+#image {
+	text-align: center;
+	height: 20%;
+}
+
+#sections {
+	text-align: center;
+	height: 20%;
+}
