@@ -1,72 +1,74 @@
 html {
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 body { 
 	margin:0;
 	padding:0;
-	perspective: 1px;
-	transform-style: preserve-3d;
 	height: 100%;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	font-family: Optima,Segoe,Segoe UI,Candara,Calibri,Arial,sans-serif;
-}
-
-table {
-	margin: 0 auto;
-	/*border: 1px solid black;*/
-}
-
-td {
-	width:30%;
-	height:300px;
-	margin: 0 auto;
-	border: 1px solid black;
-	text-align: center;
+	width: 100%;
+	font-family: Segoe UI,Helvetica,Calibri,Arial,sans-serif;
+	display: inline-block;
 }
 
 h1 {
-   font-size: 250%
-}
-
-p {
-  font-size: 140%;
-  line-height: 150%;
-  color: #333;
-}
-
-td img {
-	position: relative;
-	padding:10px;
-	width:180px;
-	height:180px;
-	border-radius: 40px;
-}
-
-td img:hover {
-	padding:0px;
-	width: 200px;
-	height: 200px;
+	color: #555;
 }
 
 #header {
+	height: 10vh;
+	font-size: 3vh;
 	text-align: center;
-	height: 15%;
 }
 
 #content {
+	margin: 3vh;
+	height: 35vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#content p {
+	max-width: 50%;
+	font-size: 4vh;
 	text-align: center;
-	height: 20%;
+	color: #777;
 }
 
 #image {
+	height: 25vh;
 	text-align: center;
-	height: 20%;
 }
 
 #sections {
+	margin: 3vh;
+	height: 13vh;
 	text-align: center;
-	height: 20%;
+	/*border: 1px solid red;*/
+}
+
+#megif {
+	max-height: 100%;
+	position: relative;
+	left: 0;
+	top: 0;
+}
+
+.sectionButtons {
+	max-height: 100%;
+	border-radius: 50%;
+	margin: 0 1vw 0 1vw;
+	opacity: 0.4;
+}
+
+.sectionButtons:hover {
+	transform: scale(1.2, 1.2);
+}
+
+@media screen and (max-width: 480px) {
+    #content p {
+		max-width: 75%;
+    }
 }

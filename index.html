@@ -9,19 +9,20 @@
     </head>
     
     <body>		
-        <div id="header" onclick="setHeader(0)">
-          <button>Hi, I'm Nick</button>
-        </div>
+        <div id="header"></div>
 		
-		<div id="content"></div>
-		<div id="image"></div>
-		<div id="sections">
-			<button>section 1</button>
-			<button>section 2</button>
-			<button>section 3</button>
-			<button>section 4</button>
+		<div id="content"><p>asdf</p></div>
+		<div id="image">
+			<img id="megif" src="images/test.png"> </img>
+			<!--<img id="megif" src="images/home_gif.gif"> </img>-->
 		</div>
-
+		<div id="sections">
+			<input id="button0" class="sectionButtons" type="image" src="images/home.png" onclick="setSectionStay(0);" onmouseover="setSection(0);" onmouseout="revertSection();"/>
+			<input id="button1" class="sectionButtons" type="image" src="images/about.png" onclick="setSectionStay(1);" onmouseover="setSection(1);" onmouseout="revertSection();"/>
+			<input id="button2" class="sectionButtons" type="image" src="images/projects.png" onclick="setSectionStay(2);" onmouseover="setSection(2);" onmouseout="revertSection();"/>
+			<input id="button3" class="sectionButtons" type="image" src="images/contact.png" onclick="setSectionStay(3);" onmouseover="setSection(3);" onmouseout="revertSection();"/>
+		</div>
+		<!--
         <div id="contacts">
             <h1>Contact</h1>
 			<table>
@@ -44,5 +45,10 @@
 				</tr>
 			</table>		
         </div>
+		-->
+		<script>
+			setSectionStay(0);
+			window.addEventListener('keydown', move);
+		</script>
     </body>
 </html>
