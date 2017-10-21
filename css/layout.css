@@ -1,74 +1,168 @@
-html {
-  height: 100%;
-  overflow-x: hidden;
+h3 {
+	margin: 0;
+	text-transform: none;
+	color: SlateBlue;
 }
 
-body { 
+h4 {
+	margin: 0;
+	text-transform: none;
+	color: white;
+}
+
+p {
+	font-weight: 100;
+}
+
+.masthead {
+	padding-top: 10%;
+}
+
+.masthead .brand-heading {
+	text-align: left;
+	text-transform: none;
 	margin:0;
-	padding:0;
-	height: 100%;
-	width: 100%;
-	font-family: Segoe UI,Helvetica,Calibri,Arial,sans-serif;
-	display: inline-block;
 }
 
-h1 {
-	color: #555;
+.masthead .intro-text {
+	text-align: left;
+	font-weight: 300;
 }
 
-#header {
-	height: 10vh;
-	font-size: 3vh;
-	text-align: center;
+.navbar-brand {
+	color: blue;
+	font-size: 20px;
 }
 
-#content {
-	margin: 3vh;
-	height: 35vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.navbar-btn {
+	border: 0;
+	padding: 10px;
+	color: white;
 }
 
-#content p {
-	max-width: 50%;
-	font-size: 4vh;
-	text-align: center;
-	color: #777;
+.navbar-btn:hover {
+	border: 0;
+	cursor: pointer;
+	color: white;
 }
 
-#image {
-	height: 25vh;
-	text-align: center;
+.navbar-btn:focus, .navbar-btn:active {
+	border: 0;
+	color: white;
+	outline: none;
+}	
+
+.dropdown-menu {
+	background-color: black;
 }
 
-#sections {
-	margin: 3vh;
-	height: 13vh;
-	text-align: center;
-	/*border: 1px solid red;*/
+.easing {
+	width:100%;
+	z-index:101;
 }
 
-#megif {
-	max-height: 100%;
-	position: relative;
-	left: 0;
+.slide {
+	position: fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	overflow: hidden;
+}
+
+.section-header {
 	top: 0;
 }
 
-.sectionButtons {
-	max-height: 100%;
-	border-radius: 50%;
-	margin: 0 1vw 0 1vw;
-	opacity: 0.4;
+.block {
+	position: absolute;
+	z-index: 999;
 }
 
-.sectionButtons:hover {
-	transform: scale(1.2, 1.2);
+.left-align {
+	text-align: left;
 }
 
-@media screen and (max-width: 480px) {
-    #content p {
-		max-width: 75%;
-    }
+.project-logo {
+	left: 0;
+	max-width: 200px;
+	height: auto;
+}
+
+.box {
+	position:absolute;
+	top: 0;
+	left:0;
+	height:100%;
+	background: SlateBlue;
+	z-index: -1;
+}
+
+.skip-btn {
+	transform: translateY(-100px);
+}
+
+#astronaut {
+	width: 250px;
+	height: auto;
+}
+
+#about {
+}
+
+#contact {
+	background: url("../img/skyline.png") no-repeat center;
+	background-color: black;
+	-webkit-background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+	-o-background-size: 100% 100%;
+	background-size: 100% 100%; 
+}
+
+#info {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	background-color: rgba(0,0,0,0.5);
+	color: #fff;
+	padding: 20px;
+	z-index: 9999;
+}
+
+#bridge {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+@media (max-width: 768px) {
+	#me {
+		display:none;
+	}
+	
+	.slide {
+		position: relative;
+	}
+}
+
+@media (max-width: 992px) {
+	#about, #projects, #projects2 {
+		font-size: 16px;
+	}
+	
+	#me {
+		width: 80%;
+		height: auto;
+	}
+	
+	#astronaut {
+		height: auto;
+		width: 80%;
+	}
+	
+	.block {
+		width: 50%;
+		height: auto;
+	}
+	 
 }
