@@ -7,7 +7,7 @@ export class TVSceneGun extends Phaser.Scene {
   preload() {
     this.load.spritesheet("duckhuntgun", "assets/duckhuntgun.png", {
       frameWidth: 75,
-      frameHeight: 105,
+      frameHeight: 120,
     });
     console.log("preload tv gun scene");
   }
@@ -40,11 +40,11 @@ export class TVSceneGun extends Phaser.Scene {
 
   update() {
     // Get position of input relative to widow and place gun accordingly
-    if (this.input.x < (window.innerWidth * 3) / 7) {
+    if (this.input.x < (window.innerWidth * 2) / 5) {
       // To the left
       this.duckhuntgun.play("left");
       this.duckhuntgun.resetFlip();
-    } else if (this.input.x > (window.innerWidth * 4) / 7) {
+    } else if (this.input.x > (window.innerWidth * 3) / 5) {
       // To the right
       this.duckhuntgun.play("left");
       this.duckhuntgun.setFlipX(true);
@@ -52,11 +52,16 @@ export class TVSceneGun extends Phaser.Scene {
       // Center
       this.duckhuntgun.play("center");
     }
+
+    // Scale x
+    const inputXRatioFromCenter =
+      (this.input.x - window.innerWidth / 2) / (window.innerWidth / 2);
+
     // Scale y
     const inputYRatio = this.input.y / window.innerHeight;
     const quarterHeight = window.innerHeight / 4;
     this.duckhuntgun.setPosition(
-      this.input.x,
+      this.input.x + (inputXRatioFromCenter * window.innerWidth) / 4,
       (window.innerHeight * 3) / 4 + inputYRatio * quarterHeight
     );
   }

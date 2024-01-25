@@ -17,6 +17,9 @@ export class BaseScene extends Phaser.Scene {
   create() {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
+    this.scene.launch("BackgroundScene");
+    this.scene.sendToBack("BackgroundScene");
+
     this.scale.on("resize", this.resize, this);
 
     this.add
@@ -37,7 +40,9 @@ export class BaseScene extends Phaser.Scene {
         resolution: 10,
       })
       .setName("backButton")
-      .setInteractive()
+      .setInteractive({
+        useHandCursor: true,
+      })
       .setVisible(false);
 
     // TV animation
@@ -54,11 +59,20 @@ export class BaseScene extends Phaser.Scene {
       frameRate: 1,
     });
 
+    this.anims.create({
+      key: "gunReady",
+      frames: this.anims.generateFrameNumbers("tv", { frames: [3] }),
+      frameRate: 1,
+    });
+
     // Create TV
     const tv = this.add
       .sprite(center.x, center.y, "tv")
       .setName("tv")
-      .setInteractive(this.input.makePixelPerfect())
+      .setInteractive({
+        useHandCursor: true,
+        pixelPerfect: true,
+      })
       .setScale(2)
       .play("flicker");
 
@@ -71,7 +85,12 @@ export class BaseScene extends Phaser.Scene {
         this.scene.sleep("TVSceneGun");
       }
 
+      if (this.closeUpGun) {
+        this.closeUpGun.destroy();
+      }
+
       tv.play("flicker");
+      tv.input.cursor = "pointer";
 
       // Reset camera zoom
       cam.pan(window.innerWidth / 2, window.innerHeight / 2, 1000);
@@ -136,10 +155,52 @@ export class BaseScene extends Phaser.Scene {
               );
 
               // Launch TV scene in back and gun in front
-              this.scene.launch("TVScene");
-              this.scene.sendToBack("TVScene");
-              this.scene.launch("TVSceneGun");
+              this.scene.isSleeping("TVScene")
+                ? this.scene.wake("TVScene")
+                : this.scene.launch("TVScene");
+
+              this.scene.moveBelow("BaseScene", "TVScene");
+              this.closeUpGun = this.add
+                .sprite(center.x, center.y, "tv")
+                .setName("closeUpGun")
+                .setInteractive({
+                  useHandCursor: true,
+                  pixelPerfect: true,
+                })
+                .setScale(4)
+                .play("gunReady");
+              const gunGlow = this.closeUpGun.postFX.addGlow(
+                0xffffff,
+                2,
+                0,
+                false,
+                0.4,
+                10
+              );
+              const closeUpGunTween = this.tweens.add({
+                targets: gunGlow,
+                outerStrength: 6,
+                yoyo: true,
+                loop: -1,
+                ease: "Sine.easeInOut",
+              });
+              this.closeUpGun.on("pointerup", () => {
+                this.closeUpGun.destroy();
+                this.scene.get("TVScene").allowShooting();
+                this.scene.isSleeping("TVSceneGun")
+                  ? this.scene.wake("TVSceneGun")
+                  : this.scene.launch("TVSceneGun");
+              });
+              this.closeUpGun.on("pointerover", () => {
+                gunGlow.outerStrength = 6;
+                closeUpGunTween.pause();
+              });
+              this.closeUpGun.on("pointerout", () => {
+                gunGlow.outerStrength = 2;
+                closeUpGunTween.resume();
+              });
               tv.play("playing");
+              tv.input.cursor = "default";
             }
           });
         }
@@ -148,5 +209,7 @@ export class BaseScene extends Phaser.Scene {
   }
 
   // TODO: reposition objects on window resize
-  resize(gameSize, baseSize, displaySize, resolution) {}
+  resize(gameSize, baseSize, displaySize, resolution) {
+    console.log();
+  }
 }

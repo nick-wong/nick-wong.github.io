@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { BaseScene } from "./scenes/BaseScene";
 import { TVScene } from "./scenes/TVScene";
 import { TVSceneGun } from "./scenes/TVSceneGun";
+import { BackgroundScene } from "./scenes/BackgroundScene";
 
 export const config = {
   type: Phaser.AUTO,
@@ -18,6 +19,6 @@ export const config = {
       gravity: { y: 10 },
     },
   },
-  scene: [BaseScene, TVScene, TVSceneGun],
+  scene: [BaseScene, BackgroundScene, TVScene, TVSceneGun],
   pixelArt: true,
 };

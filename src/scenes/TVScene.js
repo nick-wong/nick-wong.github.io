@@ -3,6 +3,7 @@ import Phaser from "phaser";
 export class TVScene extends Phaser.Scene {
   constructor() {
     super("TVScene");
+    this.canShoot = false;
   }
   preload() {
     this.load.spritesheet("tv", "assets/tv.png", {
@@ -22,8 +23,19 @@ export class TVScene extends Phaser.Scene {
     // WIP
     this.words = ["work", "in", "progress"];
 
+    /* TODO: Fix pointer
+    this.screen.on("pointerover", () => {
+      this.input.setDefaultCursor("url(assets/crosshair.png) 10 10, pointer");
+    });
+    this.screen.on("pointerout", () => {
+      this.input.setDefaultCursor("unset");
+    });
+    */
+
+    console.log("scenes", this.scene);
+
     this.input.on("pointerdown", (pointer, gameObjects) => {
-      if (gameObjects.length) {
+      if (this.canShoot && gameObjects.length) {
         if (gameObjects[0].name === "sky") {
           this.add
             .text(
@@ -45,5 +57,8 @@ export class TVScene extends Phaser.Scene {
     console.log("create tv scene");
   }
 
+  allowShooting() {
+    this.canShoot = true;
+  }
   update() {}
 }
