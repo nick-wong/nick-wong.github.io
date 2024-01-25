@@ -20,9 +20,7 @@ export class BaseScene extends Phaser.Scene {
     this.scene.launch("BackgroundScene");
     this.scene.sendToBack("BackgroundScene");
 
-    this.scale.on("resize", this.resize, this);
-
-    this.add
+    this.title = this.add
       .text(center.x, window.innerHeight / 5, "nick wong", {
         fontFamily: "Manaspace",
         fontSize: "36px",
@@ -30,20 +28,6 @@ export class BaseScene extends Phaser.Scene {
         resolution: 3,
       })
       .setOrigin(0.5); // position is center
-
-    // Create back button
-    const backButton = this.add
-      .text(20, 20, "back", {
-        fontFamily: "Manaspace",
-        fontSize: "12px",
-        align: "center",
-        resolution: 10,
-      })
-      .setName("backButton")
-      .setInteractive({
-        useHandCursor: true,
-      })
-      .setVisible(false);
 
     // TV animation
     this.anims.create({
@@ -66,7 +50,7 @@ export class BaseScene extends Phaser.Scene {
     });
 
     // Create TV
-    const tv = this.add
+    this.tv = this.add
       .sprite(center.x, center.y, "tv")
       .setName("tv")
       .setInteractive({
@@ -76,36 +60,6 @@ export class BaseScene extends Phaser.Scene {
       .setScale(2)
       .play("flicker");
 
-    // Events
-    backButton.on("pointerup", () => {
-      const cam = this.cameras.main;
-
-      if (this.scene.isActive("TVScene")) {
-        this.scene.sleep("TVScene");
-        this.scene.sleep("TVSceneGun");
-      }
-
-      if (this.closeUpGun) {
-        this.closeUpGun.destroy();
-      }
-
-      tv.play("flicker");
-      tv.input.cursor = "pointer";
-
-      // Reset camera zoom
-      cam.pan(window.innerWidth / 2, window.innerHeight / 2, 1000);
-      cam.zoomTo(1, 750);
-
-      // Hide back out button
-      backButton.setVisible(false);
-
-      this.tweens.add({
-        targets: tv,
-        scale: 2,
-        ease: "Sine.easeInOut",
-        duration: 750,
-      });
-    });
     let currentObject;
     this.input.on("gameobjectover", (_, gameObject) => {
       const cam = this.cameras.main;
@@ -135,25 +89,18 @@ export class BaseScene extends Phaser.Scene {
       const cam = this.cameras.main;
       if (currentObject?.name === "tv") {
         // Remove glow
-        tv.postFX.clear();
+        this.tv.postFX.clear();
 
         if (cam.zoom === 1) {
           //cam.pan(pointer.position.x, pointer.position.y, 1000);
           this.tweens.add({
-            targets: tv,
+            targets: this.tv,
             scale: 4,
             ease: "Sine.easeInOut",
             duration: 750,
           });
           cam.zoomTo(5, 750, "Linear", false, (camera, progress) => {
             if (progress === 1) {
-              // Show back button
-              backButton.setVisible(true);
-              backButton.setPosition(
-                cam.worldView.x + 10,
-                cam.worldView.y + 10
-              );
-
               // Launch TV scene in back and gun in front
               this.scene.isSleeping("TVScene")
                 ? this.scene.wake("TVScene")
@@ -161,7 +108,7 @@ export class BaseScene extends Phaser.Scene {
 
               this.scene.moveBelow("BaseScene", "TVScene");
               this.closeUpGun = this.add
-                .sprite(center.x, center.y, "tv")
+                .sprite(window.innerWidth / 2, window.innerHeight / 2, "tv")
                 .setName("closeUpGun")
                 .setInteractive({
                   useHandCursor: true,
@@ -186,7 +133,7 @@ export class BaseScene extends Phaser.Scene {
               });
               this.closeUpGun.on("pointerup", () => {
                 this.closeUpGun.destroy();
-                this.scene.get("TVScene").allowShooting();
+                this.scene.get("TVScene").setCanShoot(true);
                 this.scene.isSleeping("TVSceneGun")
                   ? this.scene.wake("TVSceneGun")
                   : this.scene.launch("TVSceneGun");
@@ -199,17 +146,45 @@ export class BaseScene extends Phaser.Scene {
                 gunGlow.outerStrength = 2;
                 closeUpGunTween.resume();
               });
-              tv.play("playing");
-              tv.input.cursor = "default";
+              this.tv.play("playing");
+              this.tv.input.cursor = "default";
             }
           });
         }
       }
     });
+    this.scale.on("resize", this.resize, this);
   }
 
   // TODO: reposition objects on window resize
   resize(gameSize, baseSize, displaySize, resolution) {
-    console.log();
+    const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    this.tv.setPosition(center.x, center.y);
+    this.title.setPosition(window.innerWidth / 2, window.innerHeight / 5);
+
+    if (this.closeUpGun) {
+      this.closeUpGun.setPosition(this.tv.x, this.tv.y);
+    }
+  }
+
+  reset() {
+    if (this.closeUpGun) {
+      this.closeUpGun.destroy();
+    }
+
+    this.tv.play("flicker");
+    this.tv.input.cursor = "pointer";
+
+    // Reset camera zoom
+    this.cameras.main.pan(window.innerWidth / 2, window.innerHeight / 2, 1000);
+    this.cameras.main.zoomTo(1, 750);
+
+    // Reduce size back
+    this.tweens.add({
+      targets: this.tv,
+      scale: 2,
+      ease: "Sine.easeInOut",
+      duration: 750,
+    });
   }
 }

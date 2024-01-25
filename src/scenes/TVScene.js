@@ -15,6 +15,29 @@ export class TVScene extends Phaser.Scene {
 
   create() {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    // Create back button
+    this.backButton = this.add
+      .text(10, 10, "back", {
+        fontFamily: "Manaspace",
+        fontSize: "48px",
+        align: "center",
+        resolution: 10,
+      })
+      .setName("backButton")
+      .setInteractive({
+        useHandCursor: true,
+      });
+
+    // Back button Events
+    this.backButton.on("pointerup", () => {
+      this.scene.sleep("TVSceneGun");
+      this.scene.get("BaseScene").reset();
+
+      this.setCanShoot(false);
+      this.scene.sleep();
+    });
+
     this.screen = this.add
       .rectangle(center.x, center.y - 175, 600, 475, 0x87ceeb)
       .setName("sky")
@@ -31,8 +54,6 @@ export class TVScene extends Phaser.Scene {
       this.input.setDefaultCursor("unset");
     });
     */
-
-    console.log("scenes", this.scene);
 
     this.input.on("pointerdown", (pointer, gameObjects) => {
       if (this.canShoot && gameObjects.length) {
@@ -55,10 +76,19 @@ export class TVScene extends Phaser.Scene {
     });
 
     console.log("create tv scene");
+
+    this.scale.on("resize", this.resize, this);
   }
 
-  allowShooting() {
-    this.canShoot = true;
+  setCanShoot(canShoot) {
+    this.canShoot = canShoot;
   }
   update() {}
+
+  resize(gameSize, baseSize, displaySize, resolution) {
+    this.screen.setPosition(
+      window.innerWidth / 2,
+      window.innerHeight / 2 - 175
+    );
+  }
 }
