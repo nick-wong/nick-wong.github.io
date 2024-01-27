@@ -17,6 +17,7 @@ export const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 10 },
+      // debug: true,
     },
   },
   scene: [BaseScene, BackgroundScene, TVScene, TVSceneGun],

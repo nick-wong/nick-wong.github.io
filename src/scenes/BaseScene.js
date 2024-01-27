@@ -64,12 +64,12 @@ export class BaseScene extends Phaser.Scene {
     this.input.on("gameobjectover", (_, gameObject) => {
       const cam = this.cameras.main;
       // Selectively glow
-      if (gameObject.name === "tv" && cam.zoom === 1) {
-        gameObject.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
-      }
-      // Tints
-      else if (gameObject.name === "backButton") {
-        gameObject.setTint(0xfcc200);
+      if (gameObject.name === "tv") {
+        if (cam.zoom === 1) {
+          gameObject.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
+        } else {
+          this.input.setDefaultCursor("unset");
+        }
       }
       currentObject = gameObject;
     });
@@ -77,10 +77,6 @@ export class BaseScene extends Phaser.Scene {
       // Selectively glow
       if (gameObject.name === "tv") {
         gameObject.postFX.clear();
-      }
-      // Tints
-      else if (gameObject.name === "backButton") {
-        gameObject.clearTint();
       }
       currentObject = null;
     });
@@ -171,6 +167,9 @@ export class BaseScene extends Phaser.Scene {
     if (this.closeUpGun) {
       this.closeUpGun.destroy();
     }
+
+    // Reset cursor
+    this.input.setDefaultCursor("unset");
 
     this.tv.play("flicker");
     this.tv.input.cursor = "pointer";
