@@ -67,8 +67,6 @@ export class BaseScene extends Phaser.Scene {
       if (gameObject.name === "tv") {
         if (cam.zoom === 1) {
           gameObject.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
-        } else {
-          this.input.setDefaultCursor("unset");
         }
       }
       currentObject = gameObject;
@@ -77,6 +75,7 @@ export class BaseScene extends Phaser.Scene {
       // Selectively glow
       if (gameObject.name === "tv") {
         gameObject.postFX.clear();
+        this.input.setDefaultCursor("unset");
       }
       currentObject = null;
     });

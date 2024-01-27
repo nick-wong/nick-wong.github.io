@@ -67,15 +67,20 @@ export class TVScene extends Phaser.Scene {
     // WIP
     this.words = ["work", "in", "progress"];
 
-    // TODO: Fix crosshair pointer
-    /*
-    this.sky.on("pointerover", (pointer, gameObject) => {
-      this.input.setDefaultCursor("url(assets/crosshair.png) 10 10, pointer");
+    this.sceneObjects = this.add.group([this.sky, this.scenery]);
+    this.sceneObjects.getChildren().forEach((object) => {
+      object
+        .on("pointermove", () => {
+          if (this.canShoot) {
+            this.input.setDefaultCursor(
+              "url(assets/crosshair.png) 10 10, pointer"
+            );
+          }
+        })
+        .on("pointerout", () => {
+          this.input.setDefaultCursor("unset");
+        });
     });
-    this.sky.on("pointerout", () => {
-      this.input.setDefaultCursor("unset");
-    });
-    */
 
     this.input.on("pointerdown", (pointer, gameObjects) => {
       if (this.canShoot && gameObjects.length) {
@@ -183,6 +188,14 @@ export class TVScene extends Phaser.Scene {
           })
           .setOrigin(0.5);
       });
+      this.gameState.flyingObject.on("pointerover", () => {
+        if (this.canShoot) {
+          this.input.setDefaultCursor(
+            "url(assets/crosshair.png) 10 10, pointer"
+          );
+        }
+      });
+
       this.scenery.setDepth(99);
       // Set random velocity
       this.gameState.flyingObject.setVelocity(
