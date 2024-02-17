@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import WebFontFile from "../loaders/WebFontFile";
+import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
 export class BaseScene extends Phaser.Scene {
   constructor() {
@@ -7,11 +8,27 @@ export class BaseScene extends Phaser.Scene {
   }
 
   preload() {
+    // TODO: if needed, add preloader
+    console.log("preload base assets");
     this.load.spritesheet("tv", "assets/tv.png", {
-      frameWidth: 64,
-      frameHeight: 64,
+      frameWidth: 47,
+      frameHeight: 63,
     });
     this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
+
+    console.log("preload tv assets");
+    this.load.spritesheet("target", "assets/target.png", {
+      frameWidth: 11,
+      frameHeight: 11,
+    });
+    this.load.image("background", "assets/duckhuntbg.png");
+
+    console.log("preload tv gun scene");
+    this.load.spritesheet("duckhuntgun", "assets/duckhuntgun.png", {
+      frameWidth: 75,
+      frameHeight: 120,
+    });
+    console.log("preload tv gun scene");
   }
 
   create() {
@@ -23,7 +40,7 @@ export class BaseScene extends Phaser.Scene {
     this.title = this.add
       .text(center.x, window.innerHeight / 5, "nick wong", {
         fontFamily: "Manaspace",
-        fontSize: "36px",
+        fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
         resolution: 3,
       })
@@ -94,57 +111,63 @@ export class BaseScene extends Phaser.Scene {
             ease: "Sine.easeInOut",
             duration: 750,
           });
-          cam.zoomTo(5, 750, "Linear", false, (camera, progress) => {
-            if (progress === 1) {
-              // Launch TV scene in back and gun in front
-              this.scene.isSleeping("TVScene")
-                ? this.scene.wake("TVScene")
-                : this.scene.launch("TVScene");
+          cam.zoomTo(
+            getZoom(this.tv.width * 4, this.tv.height * 4 * 0.8, 1.2),
+            750,
+            "Linear",
+            false,
+            (camera, progress) => {
+              if (progress === 1) {
+                // Launch TV scene in back and gun in front
+                this.scene.isSleeping("TVScene")
+                  ? this.scene.wake("TVScene")
+                  : this.scene.launch("TVScene");
 
-              this.scene.moveBelow("BaseScene", "TVScene");
-              this.closeUpGun = this.add
-                .sprite(window.innerWidth / 2, window.innerHeight / 2, "tv")
-                .setName("closeUpGun")
-                .setInteractive({
-                  useHandCursor: true,
-                  pixelPerfect: true,
-                })
-                .setScale(4)
-                .play("gunReady");
-              const gunGlow = this.closeUpGun.postFX.addGlow(
-                0xffffff,
-                2,
-                0,
-                false,
-                0.4,
-                10
-              );
-              const closeUpGunTween = this.tweens.add({
-                targets: gunGlow,
-                outerStrength: 6,
-                yoyo: true,
-                loop: -1,
-                ease: "Sine.easeInOut",
-              });
-              this.closeUpGun.on("pointerup", () => {
-                this.closeUpGun.destroy();
-                this.scene.get("TVScene").setCanShoot(true);
-                this.scene.isSleeping("TVSceneGun")
-                  ? this.scene.wake("TVSceneGun")
-                  : this.scene.launch("TVSceneGun");
-              });
-              this.closeUpGun.on("pointerover", () => {
-                gunGlow.outerStrength = 6;
-                closeUpGunTween.pause();
-              });
-              this.closeUpGun.on("pointerout", () => {
-                gunGlow.outerStrength = 2;
-                closeUpGunTween.resume();
-              });
-              this.tv.play("playing");
-              this.tv.input.cursor = "default";
+                this.scene.moveBelow("BaseScene", "TVScene");
+                this.tv.play("playing");
+                this.closeUpGun = this.add
+                  .sprite(window.innerWidth / 2, window.innerHeight / 2, "tv")
+                  .setName("closeUpGun")
+                  .setInteractive({
+                    useHandCursor: true,
+                    pixelPerfect: true,
+                  })
+                  .setScale(4)
+                  .play("gunReady");
+                const gunGlow = this.closeUpGun.postFX.addGlow(
+                  0xffffff,
+                  2,
+                  0,
+                  false,
+                  0.4,
+                  10
+                );
+                const closeUpGunTween = this.tweens.add({
+                  targets: gunGlow,
+                  outerStrength: 6,
+                  yoyo: true,
+                  loop: -1,
+                  ease: "Sine.easeInOut",
+                });
+                this.closeUpGun.on("pointerup", () => {
+                  this.closeUpGun.destroy();
+                  this.scene.get("TVScene").setCanShoot(true);
+                  this.scene.isSleeping("TVSceneGun")
+                    ? this.scene.wake("TVSceneGun")
+                    : this.scene.launch("TVSceneGun");
+                });
+                this.closeUpGun.on("pointerover", () => {
+                  gunGlow.outerStrength = 6;
+                  closeUpGunTween.pause();
+                });
+                this.closeUpGun.on("pointerout", () => {
+                  gunGlow.outerStrength = 2;
+                  closeUpGunTween.resume();
+                });
+                this.tv.input.cursor = "default";
+              }
             }
-          });
+          );
         }
       }
     });
@@ -155,11 +178,30 @@ export class BaseScene extends Phaser.Scene {
   resize(gameSize, baseSize, displaySize, resolution) {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     this.tv.setPosition(center.x, center.y);
+    if (this.cameras.main.zoom !== 1) {
+      this.cameras.main.setZoom(
+        getZoom(
+          this.tv.width * this.tv.scale,
+          this.tv.height * this.tv.scale * 0.8,
+          1.2
+        )
+      );
+    }
     this.title.setPosition(window.innerWidth / 2, window.innerHeight / 5);
+    this.title.setFontSize(getFontSize(FontSizes.MEDIUM));
 
     if (this.closeUpGun) {
       this.closeUpGun.setPosition(this.tv.x, this.tv.y);
     }
+
+    /* Last resort nuke it
+    for (const scene of this.scene.manager.getScenes(false)) {
+      scene.scene.stop();
+    }
+
+    // Restart first scene
+    this.scene.start("BaseScene");
+    */
   }
 
   reset() {

@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
 export class TVScene extends Phaser.Scene {
   constructor() {
@@ -8,14 +9,7 @@ export class TVScene extends Phaser.Scene {
       flyingObject: {},
     };
   }
-  preload() {
-    this.load.spritesheet("target", "assets/target.png", {
-      frameWidth: 11,
-      frameHeight: 11,
-    });
-    this.load.image("background", "assets/duckhuntbg.png");
-    console.log("preload tv scene");
-  }
+  preload() {}
 
   create() {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -24,7 +18,7 @@ export class TVScene extends Phaser.Scene {
     this.backButton = this.add
       .text(10, 10, "back", {
         fontFamily: "Manaspace",
-        fontSize: "48px",
+        fontSize: getFontSize(FontSizes.LARGE),
         align: "center",
         resolution: 5,
       })
@@ -52,17 +46,38 @@ export class TVScene extends Phaser.Scene {
         this.backButton.clearTint();
       });
 
-    this.sky = this.add
-      .rectangle(center.x, center.y - 175, 600, 480, 0x87ceeb)
-      .setName("sky")
-      .setInteractive();
+    /*
+      calculate center
+      37, 46    150, 46
+      37,132    150, 132
+
+      mid is 126
+    */
 
     this.scenery = this.add
-      .image(center.x, center.y - 175, "background")
+      .image(center.x, center.y, "background")
       .setName("scenery")
-      .setScale(4)
       .setOrigin(0.5)
+      .setDepth(99)
       .setInteractive({ pixelPerfect: true });
+
+    this.scenery.setScale(
+      getZoom(
+        this.scenery.displayOriginX / this.scenery.originX,
+        (this.scenery.displayOriginY / this.scenery.originY) * 0.8
+      )
+    );
+
+    this.sky = this.add
+      .rectangle(
+        center.x,
+        center.y + 43 * this.scenery.scale - 80 * this.scenery.scale,
+        113 * this.scenery.scale,
+        86 * this.scenery.scale,
+        0x87ceeb
+      )
+      .setName("sky")
+      .setInteractive();
 
     // WIP
     this.words = ["work", "in", "progress"];
@@ -88,7 +103,7 @@ export class TVScene extends Phaser.Scene {
           const missedShot = this.add
             .text(pointer.position.x, pointer.position.y, "x", {
               fontFamily: "Manaspace",
-              fontSize: "24px",
+              fontSize: getFontSize(FontSizes.SMALL),
               align: "center",
               resolution: 3,
             })
@@ -212,10 +227,22 @@ export class TVScene extends Phaser.Scene {
   generateRandomVelocity(min, max) {}
 
   resize(gameSize, baseSize, displaySize, resolution) {
-    this.sky.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 175);
-    this.scenery.setPosition(
-      window.innerWidth / 2,
-      window.innerHeight / 2 - 175
+    this.scenery.setPosition(window.innerWidth / 2, window.innerHeight / 2);
+    this.scenery.setScale(
+      getZoom(
+        (this.scenery.displayOriginX / this.scenery.originX) *
+          this.scenery.scale,
+        (this.scenery.displayOriginY / this.scenery.originY) *
+          this.scenery.scale *
+          0.8
+      ) * this.scenery.scale
     );
+
+    this.sky.setPosition(
+      window.innerWidth / 2,
+      window.innerHeight / 2 + 43 * this.scenery.scale - 80 * this.scenery.scale
+    );
+    this.sky.setSize(113 * this.scenery.scale, 86 * this.scenery.scale);
+    this.backButton.setFontSize(getFontSize(FontSizes.LARGE));
   }
 }

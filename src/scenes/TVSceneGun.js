@@ -4,13 +4,7 @@ export class TVSceneGun extends Phaser.Scene {
   constructor() {
     super("TVSceneGun");
   }
-  preload() {
-    this.load.spritesheet("duckhuntgun", "assets/duckhuntgun.png", {
-      frameWidth: 75,
-      frameHeight: 120,
-    });
-    console.log("preload tv gun scene");
-  }
+  preload() {}
 
   create() {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
