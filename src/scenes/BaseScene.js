@@ -9,26 +9,34 @@ export class BaseScene extends Phaser.Scene {
 
   preload() {
     // TODO: if needed, add preloader
-    console.log("preload base assets");
+
+    // base assets
     this.load.spritesheet("tv", "assets/tv.png", {
       frameWidth: 47,
       frameHeight: 63,
     });
     this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
 
-    console.log("preload tv assets");
+    // tv
+    this.load.spritesheet("startzapper", "assets/startgun.png", {
+      frameWidth: 30,
+      frameHeight: 15,
+    });
     this.load.spritesheet("target", "assets/target.png", {
       frameWidth: 11,
       frameHeight: 11,
     });
+    this.load.spritesheet("akisquirrel", "assets/akisquirrel.png", {
+      frameWidth: 100,
+      frameHeight: 20,
+    });
     this.load.image("background", "assets/duckhuntbg.png");
 
-    console.log("preload tv gun scene");
+    // zapper
     this.load.spritesheet("duckhuntgun", "assets/duckhuntgun.png", {
       frameWidth: 75,
       frameHeight: 120,
     });
-    console.log("preload tv gun scene");
   }
 
   create() {
@@ -176,25 +184,26 @@ export class BaseScene extends Phaser.Scene {
 
   // TODO: reposition objects on window resize
   resize(gameSize, baseSize, displaySize, resolution) {
-    const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    this.tv.setPosition(center.x, center.y);
-    if (this.cameras.main.zoom !== 1) {
-      this.cameras.main.setZoom(
-        getZoom(
-          this.tv.width * this.tv.scale,
-          this.tv.height * this.tv.scale * 0.8,
-          1.2
-        )
-      );
-    }
-    this.title.setPosition(window.innerWidth / 2, window.innerHeight / 5);
-    this.title.setFontSize(getFontSize(FontSizes.MEDIUM));
+    if (window.innerWidth > 240 && window.innerHeight > 240) {
+      const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      this.tv.setPosition(center.x, center.y);
+      if (this.cameras.main.zoom !== 1) {
+        this.cameras.main.setZoom(
+          getZoom(
+            this.tv.width * this.tv.scale,
+            this.tv.height * this.tv.scale * 0.8,
+            1.2
+          )
+        );
+      }
+      this.title.setPosition(window.innerWidth / 2, window.innerHeight / 5);
+      this.title.setFontSize(getFontSize(FontSizes.MEDIUM));
 
-    if (this.closeUpGun) {
-      this.closeUpGun.setPosition(this.tv.x, this.tv.y);
-    }
+      if (this.closeUpGun) {
+        this.closeUpGun.setPosition(this.tv.x, this.tv.y);
+      }
 
-    /* Last resort nuke it
+      /* Last resort nuke it
     for (const scene of this.scene.manager.getScenes(false)) {
       scene.scene.stop();
     }
@@ -202,6 +211,7 @@ export class BaseScene extends Phaser.Scene {
     // Restart first scene
     this.scene.start("BaseScene");
     */
+    }
   }
 
   reset() {

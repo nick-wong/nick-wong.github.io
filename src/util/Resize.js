@@ -13,7 +13,7 @@ export const FontSizes = {
 };
 
 export const getFontSize = (fontSize) => {
-  if (window.innerWidth < 768) {
+  if (window.innerWidth < 768 || window.innerHeight < 640) {
     if (fontSize === FontSizes.SMALL) {
       return "16px";
     } else if (fontSize === FontSizes.MEDIUM) {
