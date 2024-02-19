@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
+import crosshair from "../assets/crosshair.png";
+
 const GAME_STATES = {
   NOT_STARTED: 0,
   STARTED: 1,
@@ -97,9 +99,7 @@ export class TVScene extends Phaser.Scene {
       object
         .on("pointermove", () => {
           if (this.canShoot) {
-            this.input.setDefaultCursor(
-              "url(assets/crosshair.png) 10 10, pointer"
-            );
+            this.input.setDefaultCursor(`url(${crosshair}) 10 10, pointer`);
           }
         })
         .on("pointerout", () => {
@@ -337,7 +337,7 @@ export class TVScene extends Phaser.Scene {
     });
     this.gameState.target.on("pointerover", () => {
       if (this.canShoot) {
-        this.input.setDefaultCursor("url(assets/crosshair.png) 10 10, pointer");
+        this.input.setDefaultCursor(`url(${crosshair}) 10 10, pointer`);
       }
     });
 

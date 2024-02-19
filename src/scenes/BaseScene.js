@@ -2,6 +2,13 @@ import Phaser from "phaser";
 import WebFontFile from "../loaders/WebFontFile";
 import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
+import tv from "../assets/tv.png";
+import akisquirrel from "../assets/akisquirrel.png";
+import startzapper from "../assets/startgun.png";
+import target from "../assets/target.png";
+import background from "../assets/duckhuntbg.png";
+import duckhuntgun from "../assets/duckhuntgun.png";
+
 export class BaseScene extends Phaser.Scene {
   constructor() {
     super("BaseScene");
@@ -11,29 +18,30 @@ export class BaseScene extends Phaser.Scene {
     // TODO: if needed, add preloader
 
     // base assets
-    this.load.spritesheet("tv", "assets/tv.png", {
+    this.load.spritesheet("tv", tv, {
       frameWidth: 47,
       frameHeight: 63,
     });
     this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
 
     // tv
-    this.load.spritesheet("startzapper", "assets/startgun.png", {
+    this.load.spritesheet("startzapper", startzapper, {
       frameWidth: 30,
       frameHeight: 15,
     });
-    this.load.spritesheet("target", "assets/target.png", {
+    this.load.spritesheet("target", target, {
       frameWidth: 11,
       frameHeight: 11,
     });
-    this.load.spritesheet("akisquirrel", "assets/akisquirrel.png", {
+    console.log(akisquirrel);
+    this.load.spritesheet("akisquirrel", akisquirrel, {
       frameWidth: 100,
       frameHeight: 20,
     });
-    this.load.image("background", "assets/duckhuntbg.png");
+    this.load.image("background", background);
 
     // zapper
-    this.load.spritesheet("duckhuntgun", "assets/duckhuntgun.png", {
+    this.load.spritesheet("duckhuntgun", duckhuntgun, {
       frameWidth: 75,
       frameHeight: 120,
     });

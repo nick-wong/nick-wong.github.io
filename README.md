@@ -13,6 +13,8 @@ todo:
 - work exp
 - projects
 - make mobile friendlier
+- ambience
+- hobbies
 
 finished:
 
