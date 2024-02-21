@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.90769cd2.css",
-    "main.js": "/static/js/main.70834bbe.js",
+    "main.js": "/static/js/main.76d7fadb.js",
     "static/media/manaspc.ttf": "/static/media/manaspc.0d8565d99646c0054f84.ttf",
     "static/media/duckhuntbg.png": "/static/media/duckhuntbg.71560f9284f700937d10.png",
     "static/media/akisquirrel.png": "/static/media/akisquirrel.bad71d326ae05a0ce669.png",
@@ -9,13 +9,15 @@
     "static/media/duckhuntgun.png": "/static/media/duckhuntgun.61975be356986537ed71.png",
     "index.html": "/index.html",
     "static/media/startgun.png": "/static/media/startgun.c30b3d62669982d3bcf1.png",
+    "static/media/resetbutton.png": "/static/media/resetbutton.1150f69d4e2c96b5a7e7.png",
     "static/media/target.png": "/static/media/target.64c2e5b51ed533fdac33.png",
+    "static/media/roundsign.png": "/static/media/roundsign.28d6c76e3cd7c7686258.png",
     "static/media/crosshair.png": "/static/media/crosshair.edc458a79a1bbad3fcdc.png",
     "main.90769cd2.css.map": "/static/css/main.90769cd2.css.map",
-    "main.70834bbe.js.map": "/static/js/main.70834bbe.js.map"
+    "main.76d7fadb.js.map": "/static/js/main.76d7fadb.js.map"
   },
   "entrypoints": [
     "static/css/main.90769cd2.css",
-    "static/js/main.70834bbe.js"
+    "static/js/main.76d7fadb.js"
   ]
 }
