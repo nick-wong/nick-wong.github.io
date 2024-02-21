@@ -9,7 +9,6 @@ status: work in progress
 todo:
 
 - clean up some bad code
-- skill (duck) hunt
 - work exp
 - projects
 - make mobile friendlier
@@ -19,4 +18,4 @@ todo:
 finished:
 
 - initial scaling
-- base duck hunt
+- skill (duck) hunt

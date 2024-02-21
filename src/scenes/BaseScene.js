@@ -8,6 +8,8 @@ import startzapper from "../assets/startgun.png";
 import target from "../assets/target.png";
 import background from "../assets/duckhuntbg.png";
 import duckhuntgun from "../assets/duckhuntgun.png";
+import resetbutton from "../assets/resetbutton.png";
+import roundsign from "../assets/roundsign.png";
 
 export class BaseScene extends Phaser.Scene {
   constructor() {
@@ -33,7 +35,6 @@ export class BaseScene extends Phaser.Scene {
       frameWidth: 11,
       frameHeight: 11,
     });
-    console.log(akisquirrel);
     this.load.spritesheet("akisquirrel", akisquirrel, {
       frameWidth: 100,
       frameHeight: 20,
@@ -45,6 +46,9 @@ export class BaseScene extends Phaser.Scene {
       frameWidth: 75,
       frameHeight: 120,
     });
+
+    this.load.image("resetbutton", resetbutton);
+    this.load.image("roundsign", roundsign);
   }
 
   create() {

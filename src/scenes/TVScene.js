@@ -8,6 +8,21 @@ const GAME_STATES = {
   STARTED: 1,
 };
 
+const GAME_ROUNDS = [
+  {
+    text: "programming\nlanguages",
+    list: ["java", "golang", "javascript", "typescript", "c++", "python"],
+  },
+  {
+    text: "frontend",
+    list: ["react", "html", "css", "sass", "jquery", "phaser 3"],
+  },
+  {
+    text: "backend",
+    list: ["aws", "spring mvc", "twirp", "sql", "express", "socket.io"],
+  },
+];
+
 // notes: a lot of the math here depends on the "sky", which is measured off the scenery pixels
 export class TVScene extends Phaser.Scene {
   constructor() {
@@ -18,9 +33,10 @@ export class TVScene extends Phaser.Scene {
       state: GAME_STATES.NOT_STARTED,
       target: {},
       targetTracker: [],
-      floatingTexts: [],
+      rounds: JSON.parse(JSON.stringify(GAME_ROUNDS)),
     };
   }
+
   preload() {}
 
   create() {
@@ -91,9 +107,6 @@ export class TVScene extends Phaser.Scene {
       .setName("sky")
       .setInteractive();
 
-    // WIP
-    this.words = ["work", "in", "progress"];
-
     this.sceneObjects = this.add.group([this.sky, this.scenery]);
     this.sceneObjects.getChildren().forEach((object) => {
       object
@@ -117,6 +130,7 @@ export class TVScene extends Phaser.Scene {
               align: "center",
               resolution: 3,
             })
+            .setDepth(99)
             .setOrigin(0.5);
 
           setTimeout(() => {
@@ -183,7 +197,7 @@ export class TVScene extends Phaser.Scene {
       .setDepth(100);
     this.startScreenGroup.add(this.startScreenBackground);
     this.startScreenText1 = this.add
-      .text(this.sky.x, this.sky.y - this.sky.height / 10, "skills", {
+      .text(this.sky.x, this.sky.y - this.sky.height / 10, "skill", {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
@@ -233,6 +247,57 @@ export class TVScene extends Phaser.Scene {
       .setOrigin(0, 0.5);
     this.startScreenGroup.add(this.startScreenTextZapper);
 
+    // end screen
+    this.endScreenGroup = this.add.group();
+    this.endScreenBackground = this.add
+      .rectangle(
+        this.sky.x,
+        this.sky.y,
+        this.sky.width,
+        this.sky.height,
+        0x000000,
+        0.75
+      )
+      .setDepth(100);
+    this.endScreenGroup.add(this.endScreenBackground);
+    this.endScreenText = this.add
+      .text(this.sky.x, this.sky.y - this.sky.height / 10, "done!", {
+        fontFamily: "Manaspace",
+        fontSize: getFontSize(FontSizes.MEDIUM),
+        align: "center",
+        resolution: 3,
+      })
+      .setDepth(100)
+      .setOrigin(0.5);
+    this.endScreenGroup.add(this.endScreenText);
+
+    this.resetbutton = this.add
+      .image(this.sky.x, this.sky.y + this.sky.height / 4, "resetbutton")
+      .setOrigin(0.5)
+      .setDepth(100)
+      .setInteractive();
+    this.resetbutton.setScale(this.scenery.scale / 2);
+    this.resetbutton
+      .on("pointerdown", () => {
+        if (this.canShoot) {
+          // reset and start game
+          this.gameState.rounds = JSON.parse(JSON.stringify(GAME_ROUNDS));
+          this.startGame();
+          this.endScreenGroup.setVisible(false);
+        }
+      })
+      .on("pointerover", () => {
+        if (this.canShoot) {
+          this.resetbutton.setTint(0xff6600);
+          this.input.setDefaultCursor(`url(${crosshair}) 10 10, pointer`);
+        }
+      })
+      .on("pointerout", () => {
+        this.resetbutton.clearTint();
+      });
+    this.endScreenGroup.add(this.resetbutton);
+    this.endScreenGroup.setVisible(false);
+
     // resize events
     this.scale.on("resize", this.resize, this);
   }
@@ -250,34 +315,58 @@ export class TVScene extends Phaser.Scene {
 
   startGame() {
     this.gameState.state = GAME_STATES.STARTED;
-    this.spawnTarget();
 
-    // chase animation
-    this.chase = this.add
-      .sprite(
-        this.sky.x + this.sky.width / 5,
-        this.sky.y -
-          this.sky.height / 2 +
-          this.sky.height * this.playableSceneryRatio -
-          (20 * this.scenery.scale) / 2,
-        "akisquirrel"
+    if (!this.chase?.active) {
+      // chase animation
+      this.chase = this.add
+        .sprite(
+          this.sky.x + this.sky.width / 5,
+          this.sky.y -
+            this.sky.height / 2 +
+            this.sky.height * this.playableSceneryRatio -
+            (20 * this.scenery.scale) / 2,
+          "akisquirrel"
+        )
+        .setScale(this.scenery.scale / 2)
+        .setDepth(10)
+        .play("chase");
+      this.chase.on("animationrepeat", () => {
+        // randomize direction and repeat delay
+        const randomDirection = Math.floor(Math.random() * 2);
+
+        this.chase.setFlipX(randomDirection === 0);
+        this.chase.anims.repeatDelay = this.generateRandomChaseDelay();
+      });
+    }
+
+    // start
+    this.showRoundSignAndBegin();
+  }
+
+  startRound() {
+    const currentRound = this.gameState.rounds[0];
+
+    // add text
+    this.gameState.roundText = this.add
+      .text(
+        this.sky.x - this.sky.width * 0.4,
+        this.sky.y + this.sky.height * 0.35,
+        currentRound.text,
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.SMALL),
+          align: "left",
+          resolution: 3,
+        }
       )
-      .setScale(this.scenery.scale / 2)
-      .setDepth(10)
-      .play("chase");
-    this.chase.on("animationrepeat", () => {
-      // randomize direction and repeat delay
-      const randomDirection = Math.floor(Math.random() * 2);
-
-      this.chase.setFlipX(randomDirection === 0);
-      this.chase.anims.repeatDelay = this.generateRandomChaseDelay();
-    });
+      .setDepth(100)
+      .setOrigin(0, 0.5);
 
     // add tracking targets
-    this.words.forEach((_, index) => {
+    currentRound.list.forEach((_, index) => {
       const newTargetTracker = this.add
         .sprite(
-          this.sky.x + this.sky.width * 0.35,
+          this.sky.x + this.sky.width * 0.4,
           this.sky.y + this.sky.height * 0.35,
           "target"
         )
@@ -287,6 +376,38 @@ export class TVScene extends Phaser.Scene {
       newTargetTracker.x -=
         index * newTargetTracker.width * newTargetTracker.scale * 1.2;
       this.gameState.targetTracker.push(newTargetTracker);
+    });
+  }
+
+  showRoundSignAndBegin() {
+    const roundSign = this.add
+      .image(this.sky.x, this.sky.y - this.sky.height / 4, "roundsign")
+      .setScale(this.scenery.scale);
+    const roundSignText = this.add
+      .text(
+        this.sky.x,
+        this.sky.y - this.sky.height / 4,
+        ["round", GAME_ROUNDS.length - this.gameState.rounds.length + 1],
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.SMALL),
+          align: "center",
+          resolution: 3,
+        }
+      )
+      .setOrigin(0.5);
+
+    const roundSignTween = this.tweens.add({
+      targets: [roundSign, roundSignText],
+      alpha: 0,
+      ease: "Sine.easeInOut",
+      delay: 500,
+      duration: 250,
+    });
+
+    roundSignTween.on("complete", () => {
+      this.spawnTarget();
+      this.startRound();
     });
   }
 
@@ -314,25 +435,87 @@ export class TVScene extends Phaser.Scene {
     this.physics.add.collider(this.gameState.target, this.screenBoundRight);
 
     this.gameState.target.on("pointerdown", (pointer) => {
-      // remove from the tracker
-      const removedTarget = this.gameState.targetTracker.pop();
-      removedTarget.destroy();
+      if (this.canShoot) {
+        // destroy target regardless
+        this.gameState.target.destroy();
+        // remove from the tracker
+        const removedTarget = this.gameState.targetTracker.pop();
+        if (removedTarget) {
+          removedTarget.destroy();
 
-      // do logic
-      this.gameState.floatingTexts.push(
-        this.add
-          .text(pointer.position.x, pointer.position.y, this.words.shift(), {
-            fontFamily: "Manaspace",
-            fontSize: getFontSize(FontSizes.SMALL),
-            align: "center",
-            resolution: 3,
-          })
-          .setOrigin(0.5)
-      );
-      this.gameState.target.destroy();
+          const currentRound = this.gameState.rounds[0];
+          // do logic
+          const targetText = this.add
+            .text(
+              pointer.position.x,
+              pointer.position.y,
+              currentRound.list.shift(),
+              {
+                fontFamily: "Manaspace",
+                fontSize: getFontSize(FontSizes.SMALL),
+                align: "center",
+                resolution: 3,
+              }
+            )
+            .setOrigin(0.5)
+            .setDepth(100);
 
-      if (this.words.length) {
-        this.spawnTarget();
+          console.log("targettext", targetText);
+          // move into visible screen
+          if (
+            Math.abs(targetText.x - targetText.width / 2) <
+            this.sky.x - this.sky.width / 2
+          ) {
+            // if past left, set to edge with some buffer
+            targetText.x =
+              this.sky.x -
+              this.sky.width / 2 +
+              targetText.width / 2 +
+              this.sky.width / 20;
+          } else if (
+            targetText.x + targetText.width / 2 >
+            this.sky.x + this.sky.width / 2
+          ) {
+            // if past right
+            targetText.x =
+              this.sky.x +
+              this.sky.width / 2 -
+              targetText.width / 2 -
+              this.sky.width / 20;
+          }
+
+          // fade out and move up
+          this.tweens.add({
+            targets: targetText,
+            alpha: 0,
+            ease: "Sine.easeInOut",
+            duration: 750,
+          });
+          this.tweens.add({
+            targets: targetText,
+            y: targetText.y - targetText.height / 2,
+            ease: "Sine.easeInOut",
+            duration: 750,
+          });
+
+          setTimeout(() => {
+            targetText.destroy();
+          }, 750);
+
+          if (currentRound.list.length) {
+            this.spawnTarget();
+          } else {
+            this.gameState.roundText.destroy();
+            // try to start next round if exists
+            this.gameState.rounds.shift();
+            if (this.gameState.rounds.length) {
+              this.showRoundSignAndBegin();
+            } else {
+              // end game
+              this.endScreenGroup.setVisible(true);
+            }
+          }
+        }
       }
     });
     this.gameState.target.on("pointerover", () => {
@@ -435,19 +618,25 @@ export class TVScene extends Phaser.Scene {
         this.gameState.target.y = skyCenter.y;
       }
 
-      // clear out text
-      this.gameState.floatingTexts.forEach((text) => {
-        text.destroy();
-      });
-
-      // move target tracker
+      // move target trackers
       this.gameState.targetTracker.forEach((target, index) => {
         target.setPosition(
-          this.sky.x + this.sky.width * 0.35,
+          this.sky.x + this.sky.width * 0.4,
           this.sky.y + this.sky.height * 0.35
         );
         target.setScale(this.scenery.scale / 2);
+
+        target.x -= index * target.width * target.scale * 1.2;
       });
+
+      // round text
+      if (this.gameState.roundText?.active) {
+        this.gameState.roundText.setPosition(
+          this.sky.x - this.sky.width * 0.4,
+          this.sky.y + this.sky.height * 0.35
+        );
+        this.gameState.roundText.setFontSize(getFontSize(FontSizes.SMALL));
+      }
 
       // start screen
       if (this.startScreenGroup?.active) {
@@ -473,6 +662,23 @@ export class TVScene extends Phaser.Scene {
           this.sky.y + this.sky.height / 4
         );
         this.startScreenTextZapper.setFontSize(getFontSize(FontSizes.SMALL));
+      }
+
+      if (this.endScreenGroup?.active) {
+        this.endScreenBackground.setPosition(this.sky.x, this.sky.y);
+        this.endScreenBackground.setSize(this.sky.width, this.sky.height);
+        this.endScreenText.setPosition(
+          this.sky.x,
+          this.sky.y - this.sky.height / 10,
+          "done!"
+        );
+        this.endScreenText.setFontSize(getFontSize(FontSizes.MEDIUM));
+
+        this.resetbutton.setPosition(
+          this.sky.x,
+          this.sky.y + this.sky.height / 4
+        );
+        this.resetbutton.setScale(this.scenery.scale / 2);
       }
     }
   }
