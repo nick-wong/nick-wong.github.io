@@ -509,7 +509,9 @@ export class TVScene extends Phaser.Scene {
             // try to start next round if exists
             this.gameState.rounds.shift();
             if (this.gameState.rounds.length) {
-              this.showRoundSignAndBegin();
+              setTimeout(() => {
+                this.showRoundSignAndBegin();
+              }, 500);
             } else {
               // end game
               this.endScreenGroup.setVisible(true);
