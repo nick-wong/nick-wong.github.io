@@ -7,14 +7,17 @@ export const getZoom = (width, height, min = 0) => {
 };
 
 export const FontSizes = {
-  SMALL: 0,
-  MEDIUM: 1,
-  LARGE: 2,
+  XSMALL: 0,
+  SMALL: 1,
+  MEDIUM: 2,
+  LARGE: 3,
 };
 
 export const getFontSize = (fontSize) => {
   if (window.innerWidth < 480 || window.innerHeight < 480) {
-    if (fontSize === FontSizes.SMALL) {
+    if (fontSize === FontSizes.XSMALL) {
+      return "10px";
+    } else if (fontSize === FontSizes.SMALL) {
       return "12px";
     } else if (fontSize === FontSizes.MEDIUM) {
       return "18px";
@@ -23,7 +26,9 @@ export const getFontSize = (fontSize) => {
     }
   }
   if (window.innerWidth < 768 || window.innerHeight < 640) {
-    if (fontSize === FontSizes.SMALL) {
+    if (fontSize === FontSizes.XSMALL) {
+      return "12px";
+    } else if (fontSize === FontSizes.SMALL) {
       return "16px";
     } else if (fontSize === FontSizes.MEDIUM) {
       return "24px";
@@ -31,7 +36,9 @@ export const getFontSize = (fontSize) => {
       return "32px";
     }
   } else {
-    if (fontSize === FontSizes.SMALL) {
+    if (fontSize === FontSizes.XSMALL) {
+      return "16px";
+    } else if (fontSize === FontSizes.SMALL) {
       return "24px";
     } else if (fontSize === FontSizes.MEDIUM) {
       return "36px";

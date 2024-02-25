@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
 import crosshair from "../assets/crosshair.png";
+import { createBackButton, tvBackButton } from "../util/Helpers";
 
 const GAME_STATES = {
   NOT_STARTED: 0,
@@ -41,47 +42,15 @@ export class TVScene extends Phaser.Scene {
 
   create() {
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-
-    // Create back button
-    this.backButton = this.add
-      .text(10, 10, "back", {
-        fontFamily: "Manaspace",
-        fontSize: getFontSize(FontSizes.LARGE),
-        align: "center",
-        resolution: 5,
-      })
-      .setName("backButton")
-      .setInteractive({
-        useHandCursor: true,
-      });
-
-    // Back button Events
-    this.backButton
-      .on("pointerup", () => {
-        if (this.scene.isActive("TVSceneGun")) {
-          this.scene.sleep("TVSceneGun");
-        }
-        this.scene.get("BaseScene").reset();
-
-        this.setCanShoot(false);
-        this.scene.sleep();
-        this.backButton.clearTint();
-      })
-      .on("pointerover", () => {
-        this.backButton.setTint(0xfcc200);
-      })
-      .on("pointerout", () => {
-        this.backButton.clearTint();
-      });
+    createBackButton(this, tvBackButton);
 
     /*
-      calculate center
+      calculate center based on pixels
       37, 46    150, 46
       37,132    150, 132
 
       mid is 126
     */
-
     this.scenery = this.add
       .image(center.x, center.y, "background")
       .setName("scenery")
@@ -306,10 +275,12 @@ export class TVScene extends Phaser.Scene {
 
   setCanShoot(canShoot) {
     this.canShoot = canShoot;
-    this.startScreenGroup.destroy(true, true);
-    this.startScreenGroup.setActive(false);
-    if (this.gameState.state === GAME_STATES.NOT_STARTED) {
-      this.startGame();
+    if (canShoot) {
+      this.startScreenGroup.destroy(true, true);
+      this.startScreenGroup.setActive(false);
+      if (this.gameState.state === GAME_STATES.NOT_STARTED) {
+        this.startGame();
+      }
     }
   }
 
@@ -387,7 +358,7 @@ export class TVScene extends Phaser.Scene {
       .text(
         this.sky.x,
         this.sky.y - this.sky.height / 4,
-        ["round", GAME_ROUNDS.length - this.gameState.rounds.length + 1],
+        ["round", this.getRoundNumber()],
         {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.SMALL),
@@ -409,6 +380,10 @@ export class TVScene extends Phaser.Scene {
       this.spawnTarget();
       this.startRound();
     });
+  }
+
+  getRoundNumber() {
+    return GAME_ROUNDS.length - this.gameState.rounds.length + 1;
   }
 
   spawnTarget() {
@@ -460,7 +435,6 @@ export class TVScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-          console.log("targettext", targetText);
           // move into visible screen
           if (
             Math.abs(targetText.x - targetText.width / 2) <
@@ -526,14 +500,17 @@ export class TVScene extends Phaser.Scene {
       }
     });
 
-    // Set random velocity
+    // target speed range based on round
+    const targetSpeedRange = this.getRoundNumber() * 20;
+
+    // set random velocity
     this.gameState.target.setVelocity(
       Math.floor(Math.random() * 2) === 0
-        ? Math.random() * 50 + 50
-        : Math.random() * 50 - 100,
+        ? Math.random() * targetSpeedRange + targetSpeedRange
+        : Math.random() * targetSpeedRange - targetSpeedRange * 2,
       Math.floor(Math.random() * 2) === 0
-        ? Math.random() * 50 + 50
-        : Math.random() * 50 - 100
+        ? Math.random() * targetSpeedRange + targetSpeedRange
+        : Math.random() * targetSpeedRange - targetSpeedRange * 2
     );
   }
 
@@ -563,7 +540,6 @@ export class TVScene extends Phaser.Scene {
           80 * this.scenery.scale
       );
       this.sky.setSize(114 * this.scenery.scale, 87 * this.scenery.scale);
-      this.backButton.setFontSize(getFontSize(FontSizes.LARGE));
 
       // update bounds
       this.ground.position = {

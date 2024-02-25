@@ -10,6 +10,11 @@ import background from "../assets/duckhuntbg.png";
 import duckhuntgun from "../assets/duckhuntgun.png";
 import resetbutton from "../assets/resetbutton.png";
 import roundsign from "../assets/roundsign.png";
+import diplomasmall from "../assets/diploma_small.png";
+import diploma from "../assets/diploma.png";
+
+import { GrayscalePipeline } from "../util/Pipelines";
+import { createBackButton, diplomaBackButton } from "../util/Helpers";
 
 export class BaseScene extends Phaser.Scene {
   constructor() {
@@ -19,12 +24,15 @@ export class BaseScene extends Phaser.Scene {
   preload() {
     // TODO: if needed, add preloader
 
+    this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
+
     // base assets
     this.load.spritesheet("tv", tv, {
       frameWidth: 47,
       frameHeight: 63,
     });
-    this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
+    this.load.image("diplomasmall", diplomasmall);
+    this.load.image("diploma", diploma);
 
     // tv
     this.load.spritesheet("startzapper", startzapper, {
@@ -52,6 +60,13 @@ export class BaseScene extends Phaser.Scene {
   }
 
   create() {
+    this.game.renderer.pipelines.add(
+      "Grayscale",
+      new GrayscalePipeline(this.game)
+    );
+
+    this.baseObjectGroup = this.add.group();
+
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
     this.scene.launch("BackgroundScene");
@@ -64,6 +79,7 @@ export class BaseScene extends Phaser.Scene {
         align: "center",
         resolution: 3,
       })
+      .setName("title")
       .setOrigin(0.5); // position is center
 
     // TV animation
@@ -95,103 +111,214 @@ export class BaseScene extends Phaser.Scene {
         pixelPerfect: true,
       })
       .setScale(2)
+      .setPipeline("Grayscale")
       .play("flicker");
 
-    let currentObject;
-    this.input.on("gameobjectover", (_, gameObject) => {
-      const cam = this.cameras.main;
-      // Selectively glow
-      if (gameObject.name === "tv") {
-        if (cam.zoom === 1) {
-          gameObject.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
+    this.tvText = this.add
+      .text(
+        this.tv.x,
+        this.tv.y +
+          (this.tv.height * this.tv.scale) / 2 +
+          window.innerHeight / 50,
+        "???",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.XSMALL),
+          align: "center",
+          resolution: 3,
         }
+      )
+      .setOrigin(0.5, 0);
+
+    // diploma
+    this.diplomaSmall = this.add
+      .image(
+        center.x -
+          (window.innerWidth < 480
+            ? window.innerWidth / 3
+            : this.tv.width + window.innerWidth / 10),
+        center.y - window.innerHeight / 10,
+        "diplomasmall"
+      )
+      .setName("diplomasmall")
+      .setScale(this.tv.scale)
+      .setPipeline("Grayscale")
+      .setOrigin(0.5)
+      .setInteractive({
+        useHandCursor: true,
+        pixelPerfect: true,
+      });
+
+    this.diplomaText = this.add
+      .text(
+        this.diplomaSmall.x,
+        this.diplomaSmall.y +
+          (this.diplomaSmall.height * this.diplomaSmall.scale) / 2 +
+          window.innerHeight / 50,
+        "???",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.XSMALL),
+          align: "center",
+          resolution: 3,
+        }
+      )
+      .setOrigin(0.5, 0); // position is center
+
+    // events
+    this.tv.on("pointerover", () => {
+      const cam = this.cameras.main;
+      // add glow
+      if (cam.zoom === 1) {
+        this.tv.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
       }
-      currentObject = gameObject;
+    });
+    this.diplomaSmall.on("pointerover", () => {
+      // add glow
+      this.diplomaSmall.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
     });
     this.input.on("gameobjectout", (_, gameObject) => {
-      // Selectively glow
-      if (gameObject.name === "tv") {
+      // remove glow
+      if (gameObject.name === "tv" || gameObject.name === "diplomasmall") {
         gameObject.postFX.clear();
         this.input.setDefaultCursor("unset");
       }
-      currentObject = null;
     });
-    this.input.on("pointerup", (pointer) => {
-      // TODO: zoom to hardcoded object positions
+    this.tv.on("pointerup", (pointer) => {
+      // TODO: zoom to object center positions when applicable
       const cam = this.cameras.main;
-      if (currentObject?.name === "tv") {
-        // Remove glow
-        this.tv.postFX.clear();
+      // Remove glow
+      this.tv.postFX.clear();
+      this.tv.setDepth(99);
 
-        if (cam.zoom === 1) {
-          //cam.pan(pointer.position.x, pointer.position.y, 1000);
-          this.tweens.add({
-            targets: this.tv,
-            scale: 4,
-            ease: "Sine.easeInOut",
-            duration: 750,
-          });
-          cam.zoomTo(
-            getZoom(this.tv.width * 4, this.tv.height * 4 * 0.8, 1.2),
-            750,
-            "Linear",
-            false,
-            (camera, progress) => {
-              if (progress === 1) {
-                // Launch TV scene in back and gun in front
-                this.scene.isSleeping("TVScene")
-                  ? this.scene.wake("TVScene")
-                  : this.scene.launch("TVScene");
+      if (cam.zoom === 1) {
+        //cam.pan(pointer.position.x, pointer.position.y, 1000);
 
-                this.scene.moveBelow("BaseScene", "TVScene");
-                this.tv.play("playing");
-                this.closeUpGun = this.add
-                  .sprite(window.innerWidth / 2, window.innerHeight / 2, "tv")
-                  .setName("closeUpGun")
-                  .setInteractive({
-                    useHandCursor: true,
-                    pixelPerfect: true,
-                  })
-                  .setScale(4)
-                  .play("gunReady");
-                const gunGlow = this.closeUpGun.postFX.addGlow(
-                  0xffffff,
-                  2,
-                  0,
-                  false,
-                  0.4,
-                  10
-                );
-                const closeUpGunTween = this.tweens.add({
-                  targets: gunGlow,
-                  outerStrength: 6,
-                  yoyo: true,
-                  loop: -1,
-                  ease: "Sine.easeInOut",
-                });
-                this.closeUpGun.on("pointerup", () => {
-                  this.closeUpGun.destroy();
-                  this.scene.get("TVScene").setCanShoot(true);
-                  this.scene.isSleeping("TVSceneGun")
-                    ? this.scene.wake("TVSceneGun")
-                    : this.scene.launch("TVSceneGun");
-                });
-                this.closeUpGun.on("pointerover", () => {
-                  gunGlow.outerStrength = 6;
-                  closeUpGunTween.pause();
-                });
-                this.closeUpGun.on("pointerout", () => {
-                  gunGlow.outerStrength = 2;
-                  closeUpGunTween.resume();
-                });
-                this.tv.input.cursor = "default";
-              }
+        this.tweens.add({
+          targets: this.tv,
+          scale: 4,
+          ease: "Sine.easeInOut",
+          duration: 750,
+        });
+        cam.zoomTo(
+          getZoom(this.tv.width * 4, this.tv.height * 4 * 0.8, 1.2),
+          750,
+          "Linear",
+          false,
+          (camera, progress) => {
+            this.moveTvText();
+            if (progress === 1) {
+              // remove grayscale and show text
+              this.tv.resetPipeline();
+              this.tvText.setText("skills");
+
+              // hide all other objects
+              this.hideAllObjectsExcept("tv");
+
+              // launch TV scene in back and gun in front
+              this.scene.isSleeping("TVScene")
+                ? this.scene.wake("TVScene")
+                : this.scene.launch("TVScene");
+
+              this.scene.moveBelow("BaseScene", "TVScene");
+
+              this.tv.play("playing");
+              this.closeUpGun = this.add
+                .sprite(window.innerWidth / 2, window.innerHeight / 2, "tv")
+                .setName("closeUpGun")
+                .setInteractive({
+                  useHandCursor: true,
+                  pixelPerfect: true,
+                })
+                .setScale(4)
+                .play("gunReady");
+              const gunGlow = this.closeUpGun.postFX.addGlow(
+                0xffffff,
+                2,
+                0,
+                false,
+                0.4,
+                10
+              );
+              const closeUpGunTween = this.tweens.add({
+                targets: gunGlow,
+                outerStrength: 6,
+                yoyo: true,
+                loop: -1,
+                ease: "Sine.easeInOut",
+              });
+              this.closeUpGun.on("pointerup", () => {
+                this.closeUpGun.destroy();
+                this.scene.get("TVScene").setCanShoot(true);
+                this.scene.isSleeping("TVSceneGun")
+                  ? this.scene.wake("TVSceneGun")
+                  : this.scene.launch("TVSceneGun");
+              });
+              this.closeUpGun.on("pointerover", () => {
+                gunGlow.outerStrength = 6;
+                closeUpGunTween.pause();
+              });
+              this.closeUpGun.on("pointerout", () => {
+                gunGlow.outerStrength = 2;
+                closeUpGunTween.resume();
+              });
+              this.tv.input.cursor = "default";
             }
-          );
-        }
+          }
+        );
       }
     });
+    this.diplomaSmall.on("pointerup", () => {
+      this.diplomaSmall.postFX.clear();
+
+      // remove grayscale and show text
+      this.diplomaSmall.resetPipeline();
+      this.diplomaText.setText("education");
+
+      createBackButton(this, diplomaBackButton, true);
+      this.diploma = this.add
+        .plane(window.innerWidth / 2, window.innerHeight / 2, "diploma")
+        .setInteractive();
+      this.diploma.setScale(
+        getZoom(
+          this.diploma.displayWidth * 1.1,
+          this.diploma.displayHeight * 1.1
+        )
+      );
+
+      this.diploma.on("pointermove", (_, localX, localY) => {
+        const maxRotation = 1;
+
+        // inverted based on 3d
+        this.diploma.modelRotation.x =
+          maxRotation * (localY / this.diploma.displayWidth / 2);
+        this.diploma.modelRotation.y =
+          maxRotation * (localX / this.diploma.displayHeight / 2);
+      });
+    });
+
+    this.baseObjectGroup.addMultiple([
+      this.title,
+      this.tv,
+      this.tvText,
+      this.diplomaSmall,
+      this.diplomaText,
+    ]);
     this.scale.on("resize", this.resize, this);
+  }
+
+  showAllObjects() {
+    this.baseObjectGroup.getChildren().forEach((obj) => {
+      obj.setVisible(true);
+    });
+  }
+
+  hideAllObjectsExcept(name) {
+    this.baseObjectGroup.getChildren().forEach((obj) => {
+      if (obj.name !== name) {
+        obj.setVisible(false);
+      }
+    });
   }
 
   // TODO: reposition objects on window resize
@@ -199,6 +326,8 @@ export class BaseScene extends Phaser.Scene {
     if (window.innerWidth > 240 && window.innerHeight > 240) {
       const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       this.tv.setPosition(center.x, center.y);
+      this.moveTvText();
+      this.tvText.setFontSize(getFontSize(FontSizes.XSMALL));
       if (this.cameras.main.zoom !== 1) {
         this.cameras.main.setZoom(
           getZoom(
@@ -215,15 +344,46 @@ export class BaseScene extends Phaser.Scene {
         this.closeUpGun.setPosition(this.tv.x, this.tv.y);
       }
 
-      /* Last resort nuke it
-    for (const scene of this.scene.manager.getScenes(false)) {
-      scene.scene.stop();
-    }
+      // diploma
+      this.diplomaSmall.setPosition(
+        center.x -
+          (window.innerWidth < 480
+            ? window.innerWidth / 3
+            : this.tv.width + window.innerWidth / 10),
+        center.y - window.innerHeight / 10
+      );
+      this.diplomaText.setPosition(
+        this.diplomaSmall.x,
+        this.diplomaSmall.y +
+          (this.diplomaSmall.height * this.diplomaSmall.scale) / 2 +
+          window.innerHeight / 50
+      );
+      this.diplomaText.setFontSize(getFontSize(FontSizes.XSMALL));
+      if (this.diploma) {
+        this.diploma.setScale(
+          getZoom(
+            this.diploma.displayWidth * 1.1,
+            this.diploma.displayHeight * 1.1
+          )
+        );
+      }
 
-    // Restart first scene
-    this.scene.start("BaseScene");
-    */
+      /* Last resort nuke it
+      for (const scene of this.scene.manager.getScenes(false)) {
+        scene.scene.stop();
+      }
+
+      // Restart first scene
+      this.scene.start("BaseScene");
+      */
     }
+  }
+
+  moveTvText() {
+    this.tvText.setPosition(
+      this.tv.x,
+      this.tv.y + (this.tv.height * this.tv.scale) / 2 + window.innerHeight / 50
+    );
   }
 
   reset() {
@@ -236,10 +396,14 @@ export class BaseScene extends Phaser.Scene {
 
     this.tv.play("flicker");
     this.tv.input.cursor = "pointer";
+    this.tv.setDepth(0);
+    this.showAllObjects();
 
     // Reset camera zoom
     this.cameras.main.pan(window.innerWidth / 2, window.innerHeight / 2, 1000);
-    this.cameras.main.zoomTo(1, 750);
+    this.cameras.main.zoomTo(1, 750, "Linear", false, () => {
+      this.moveTvText();
+    });
 
     // Reduce size back
     this.tweens.add({
