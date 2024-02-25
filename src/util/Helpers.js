@@ -14,7 +14,7 @@ export const createBackButton = (
       fontFamily: "Manaspace",
       fontSize: getFontSize(FontSizes.LARGE),
       align: "center",
-      resolution: 5,
+      resolution: 20,
     })
     .setName("backButton")
     .setDepth(100)

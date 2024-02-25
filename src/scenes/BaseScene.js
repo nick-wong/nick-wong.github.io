@@ -26,6 +26,9 @@ export class BaseScene extends Phaser.Scene {
 
     this.load.addFile(new WebFontFile(this.load, ["Manaspace"], "custom"));
 
+    // bitmap fonts
+    // this.load.bitmapFont("Manaspace", manaspc_png, manaspc_xml);
+
     // base assets
     this.load.spritesheet("tv", tv, {
       frameWidth: 47,
@@ -60,6 +63,9 @@ export class BaseScene extends Phaser.Scene {
   }
 
   create() {
+    // TODO check if canvas
+    // this.game.renderer.type === Phaser.CANVAS;
+
     this.game.renderer.pipelines.add(
       "Grayscale",
       new GrayscalePipeline(this.game)
@@ -77,7 +83,7 @@ export class BaseScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 3,
+        resolution: 20,
       })
       .setName("title")
       .setOrigin(0.5); // position is center
@@ -125,7 +131,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 3,
+          resolution: 20,
         }
       )
       .setOrigin(0.5, 0);
@@ -160,7 +166,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 3,
+          resolution: 20,
         }
       )
       .setOrigin(0.5, 0); // position is center

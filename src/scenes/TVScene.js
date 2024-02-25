@@ -97,7 +97,7 @@ export class TVScene extends Phaser.Scene {
               fontFamily: "Manaspace",
               fontSize: getFontSize(FontSizes.SMALL),
               align: "center",
-              resolution: 3,
+              resolution: 20,
             })
             .setDepth(99)
             .setOrigin(0.5);
@@ -170,7 +170,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 3,
+        resolution: 20,
       })
       .setDepth(100)
       .setOrigin(1);
@@ -180,7 +180,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 3,
+        resolution: 20,
         color: "rgb(255, 102, 0)",
       })
       .setDepth(100)
@@ -210,7 +210,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.SMALL),
         align: "center",
-        resolution: 3,
+        resolution: 20,
       })
       .setDepth(100)
       .setOrigin(0, 0.5);
@@ -234,7 +234,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 3,
+        resolution: 20,
       })
       .setDepth(100)
       .setOrigin(0.5);
@@ -325,9 +325,9 @@ export class TVScene extends Phaser.Scene {
         currentRound.text,
         {
           fontFamily: "Manaspace",
-          fontSize: getFontSize(FontSizes.SMALL),
+          fontSize: getFontSize(FontSizes.XSMALL),
           align: "left",
-          resolution: 3,
+          resolution: 20,
         }
       )
       .setDepth(100)
@@ -363,7 +363,7 @@ export class TVScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.SMALL),
           align: "center",
-          resolution: 3,
+          resolution: 20,
         }
       )
       .setOrigin(0.5);
@@ -429,7 +429,7 @@ export class TVScene extends Phaser.Scene {
                 fontFamily: "Manaspace",
                 fontSize: getFontSize(FontSizes.SMALL),
                 align: "center",
-                resolution: 3,
+                resolution: 20,
               }
             )
             .setOrigin(0.5)
@@ -613,7 +613,7 @@ export class TVScene extends Phaser.Scene {
           this.sky.x - this.sky.width * 0.4,
           this.sky.y + this.sky.height * 0.35
         );
-        this.gameState.roundText.setFontSize(getFontSize(FontSizes.SMALL));
+        this.gameState.roundText.setFontSize(getFontSize(FontSizes.XSMALL));
       }
 
       // start screen
