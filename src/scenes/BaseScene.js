@@ -364,8 +364,9 @@ export class BaseScene extends Phaser.Scene {
           getZoom(
             this.diploma.displayWidth * 1.1,
             this.diploma.displayHeight * 1.1
-          )
+          ) * this.diploma.scale
         );
+        this.diploma.setPosition(center.x, center.y);
       }
 
       /* Last resort nuke it
