@@ -47,3 +47,7 @@ export const getFontSize = (fontSize) => {
     }
   }
 };
+
+export const getWidthOffset = (width = 100) => {
+  return window.innerWidth / width;
+};

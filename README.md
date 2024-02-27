@@ -23,3 +23,4 @@ finished:
 - skill (duck) hunt
 - initial diploma/education
 - grayscaling
+- icons/links to github and linkedin

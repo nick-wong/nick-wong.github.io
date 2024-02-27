@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+export const PIPELINE_GRAYSCALE = "Grayscale";
+
 // https://phaser.discourse.group/t/grayscale-in-phaser3/6369/3
 export const GrayscalePipeline = new Phaser.Class({
   Extends: Phaser.Renderer.WebGL.Pipelines.MultiPipeline,

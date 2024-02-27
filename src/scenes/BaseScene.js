@@ -1,6 +1,11 @@
 import Phaser from "phaser";
 import WebFontFile from "../loaders/WebFontFile";
-import { FontSizes, getFontSize, getZoom } from "../util/Resize";
+import {
+  FontSizes,
+  getFontSize,
+  getWidthOffset,
+  getZoom,
+} from "../util/Resize";
 
 import tv from "../assets/tv.png";
 import akisquirrel from "../assets/akisquirrel.png";
@@ -13,8 +18,10 @@ import roundsign from "../assets/roundsign.png";
 import diplomasmall from "../assets/diploma_small.png";
 import diploma from "../assets/diploma.png";
 import roomwindow from "../assets/window.png";
+import githubicon from "../assets/icons/github.png";
+import linkedinicon from "../assets/icons/linkedin.png";
 
-import { GrayscalePipeline } from "../util/Pipelines";
+import { GrayscalePipeline, PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import { createBackButton, diplomaBackButton } from "../util/Helpers";
 
 export class BaseScene extends Phaser.Scene {
@@ -66,6 +73,10 @@ export class BaseScene extends Phaser.Scene {
 
     this.load.image("resetbutton", resetbutton);
     this.load.image("roundsign", roundsign);
+
+    // icons
+    this.load.image("githubicon", githubicon);
+    this.load.image("linkedinicon", linkedinicon);
   }
 
   create() {
@@ -73,7 +84,7 @@ export class BaseScene extends Phaser.Scene {
     // this.game.renderer.type === Phaser.CANVAS;
 
     this.game.renderer.pipelines.add(
-      "Grayscale",
+      PIPELINE_GRAYSCALE,
       new GrayscalePipeline(this.game)
     );
 
@@ -123,7 +134,7 @@ export class BaseScene extends Phaser.Scene {
         pixelPerfect: true,
       })
       .setScale(2)
-      .setPipeline("Grayscale")
+      .setPipeline(PIPELINE_GRAYSCALE)
       .play("flicker");
 
     this.tvText = this.add
@@ -154,7 +165,7 @@ export class BaseScene extends Phaser.Scene {
       )
       .setName("diplomasmall")
       .setScale(this.tv.scale)
-      .setPipeline("Grayscale")
+      .setPipeline(PIPELINE_GRAYSCALE)
       .setOrigin(0.5)
       .setInteractive({
         useHandCursor: true,
@@ -197,7 +208,7 @@ export class BaseScene extends Phaser.Scene {
       )
       .setName("roomWindow")
       .setScale(this.tv.scale)
-      .setPipeline("Grayscale")
+      .setPipeline(PIPELINE_GRAYSCALE)
       .setOrigin(0.5)
       .play("nightsky")
       .setInteractive({
@@ -219,6 +230,49 @@ export class BaseScene extends Phaser.Scene {
         }
       )
       .setOrigin(0.5, 0);
+
+    // icons
+    this.github = this.add
+      .image(
+        center.x - getWidthOffset(),
+        window.innerHeight * 0.8,
+        "githubicon"
+      )
+      .setScale(2)
+      .setTint(0xaaaaaa)
+      .setInteractive({ useHandCursor: true, pixelPerfect: true })
+      .setOrigin(1, 0.5);
+    this.github
+      .on("pointerover", () => {
+        this.github.clearTint();
+      })
+      .on("pointerout", () => {
+        this.github.setTint(0xaaaaaa);
+      })
+      .on("pointerup", () => {
+        window.open("https://github.com/nick-wong", "_blank");
+      });
+
+    this.linkedin = this.add
+      .image(
+        center.x + getWidthOffset(),
+        window.innerHeight * 0.8,
+        "linkedinicon"
+      )
+      .setScale(2)
+      .setPipeline(PIPELINE_GRAYSCALE)
+      .setInteractive({ useHandCursor: true, pixelPerfect: true })
+      .setOrigin(0, 0.5);
+    this.linkedin
+      .on("pointerover", () => {
+        this.linkedin.resetPipeline();
+      })
+      .on("pointerout", () => {
+        this.linkedin.setPipeline(PIPELINE_GRAYSCALE);
+      })
+      .on("pointerup", () => {
+        window.open("https://www.linkedin.com/in/nicholas-k-wong/", "_blank");
+      });
 
     // events
     this.tv.on("pointerover", () => {
@@ -482,6 +536,17 @@ export class BaseScene extends Phaser.Scene {
           (this.roomWindow.height * this.roomWindow.scale) / 2 +
           window.innerHeight / 50
       );
+
+      // icons
+      this.github.setPosition(
+        center.x - getWidthOffset(),
+        window.innerHeight * 0.8
+      );
+      this.linkedin.setPosition(
+        center.x + getWidthOffset(),
+        window.innerHeight * 0.8
+      );
+
       /* Last resort nuke it
       for (const scene of this.scene.manager.getScenes(false)) {
         scene.scene.stop();
