@@ -12,6 +12,7 @@ import resetbutton from "../assets/resetbutton.png";
 import roundsign from "../assets/roundsign.png";
 import diplomasmall from "../assets/diploma_small.png";
 import diploma from "../assets/diploma.png";
+import roomwindow from "../assets/window.png";
 
 import { GrayscalePipeline } from "../util/Pipelines";
 import { createBackButton, diplomaBackButton } from "../util/Helpers";
@@ -36,6 +37,11 @@ export class BaseScene extends Phaser.Scene {
     });
     this.load.image("diplomasmall", diplomasmall);
     this.load.image("diploma", diploma);
+
+    this.load.spritesheet("roomWindow", roomwindow, {
+      frameWidth: 53,
+      frameHeight: 53,
+    });
 
     // tv
     this.load.spritesheet("startzapper", startzapper, {
@@ -169,23 +175,105 @@ export class BaseScene extends Phaser.Scene {
           resolution: 20,
         }
       )
-      .setOrigin(0.5, 0); // position is center
+      .setOrigin(0.5, 0);
+
+    // window
+    this.anims.create({
+      key: "nightsky",
+      frames: this.anims.generateFrameNumbers("roomWindow", {
+        frames: [0, 1, 2, 3],
+      }),
+      frameRate: 0.5,
+      repeat: -1,
+    });
+    this.roomWindow = this.add
+      .sprite(
+        center.x +
+          (window.innerWidth < 480
+            ? window.innerWidth / 3
+            : this.tv.width + window.innerWidth / 7.5),
+        center.y - window.innerHeight / 8,
+        "roomWindow"
+      )
+      .setName("roomWindow")
+      .setScale(this.tv.scale)
+      .setPipeline("Grayscale")
+      .setOrigin(0.5)
+      .play("nightsky")
+      .setInteractive({
+        useHandCursor: true,
+        pixelPerfect: true,
+      });
+    this.windowText = this.add
+      .text(
+        this.roomWindow.x,
+        this.roomWindow.y +
+          (this.roomWindow.height * this.roomWindow.scale) / 2 +
+          window.innerHeight / 50,
+        "???",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.XSMALL),
+          align: "center",
+          resolution: 20,
+        }
+      )
+      .setOrigin(0.5, 0);
 
     // events
     this.tv.on("pointerover", () => {
       const cam = this.cameras.main;
-      // add glow
       if (cam.zoom === 1) {
-        this.tv.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
+        this.addGlowToObject(this.tv);
       }
     });
     this.diplomaSmall.on("pointerover", () => {
-      // add glow
-      this.diplomaSmall.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
+      this.addGlowToObject(this.diplomaSmall);
     });
+    this.roomWindow
+      .on("pointerover", () => {
+        this.addGlowToObject(this.roomWindow);
+        // run for a long period/while hovering
+      })
+      .on("pointerout", () => {
+        this.cameras.main.resetFX();
+      })
+      .on("pointerup", () => {
+        const cam = this.cameras.main;
+
+        // warp by shake + pan + rotate
+        cam.shake(750, 0.01);
+        cam.pan(this.roomWindow.x, this.roomWindow.y, 750);
+        cam.zoomTo(2, 750);
+        const warpTween = this.tweens.add({
+          targets: cam,
+          rotation: 9,
+          ease: Phaser.Math.Easing.Quadratic.InOut,
+          duration: 750,
+        });
+        warpTween.on("complete", () => {
+          cam.flash();
+
+          // todo: launch exp stuff
+
+          // reset camera
+          cam.setZoom(1);
+          cam.setRotation(0);
+          cam.setScroll(0);
+
+          // remove grayscale and show text
+          this.roomWindow.resetPipeline();
+          this.windowText.setText(["experience", "(wip)"]);
+        });
+      });
+
     this.input.on("gameobjectout", (_, gameObject) => {
       // remove glow
-      if (gameObject.name === "tv" || gameObject.name === "diplomasmall") {
+      if (
+        gameObject.name === "tv" ||
+        gameObject.name === "diplomasmall" ||
+        gameObject.name === "roomWindow"
+      ) {
         gameObject.postFX.clear();
         this.input.setDefaultCursor("unset");
       }
@@ -309,8 +397,14 @@ export class BaseScene extends Phaser.Scene {
       this.tvText,
       this.diplomaSmall,
       this.diplomaText,
+      this.roomWindow,
+      this.windowText,
     ]);
     this.scale.on("resize", this.resize, this);
+  }
+
+  addGlowToObject(obj) {
+    obj.postFX.addGlow(0xffffff, 3, 0, false, 0.4, 5);
   }
 
   showAllObjects() {
@@ -375,6 +469,19 @@ export class BaseScene extends Phaser.Scene {
         this.diploma.setPosition(center.x, center.y);
       }
 
+      this.roomWindow.setPosition(
+        center.x +
+          (window.innerWidth < 480
+            ? window.innerWidth / 3
+            : this.tv.width + window.innerWidth / 7.5),
+        center.y - window.innerHeight / 8
+      );
+      this.windowText.setPosition(
+        this.roomWindow.x,
+        this.roomWindow.y +
+          (this.roomWindow.height * this.roomWindow.scale) / 2 +
+          window.innerHeight / 50
+      );
       /* Last resort nuke it
       for (const scene of this.scene.manager.getScenes(false)) {
         scene.scene.stop();
