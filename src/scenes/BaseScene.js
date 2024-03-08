@@ -21,7 +21,7 @@ import roomwindow from "../assets/window.png";
 import githubicon from "../assets/icons/github.png";
 import linkedinicon from "../assets/icons/linkedin.png";
 
-import { GrayscalePipeline, PIPELINE_GRAYSCALE } from "../util/Pipelines";
+import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import { createBackButton, diplomaBackButton } from "../util/Helpers";
 
 export class BaseScene extends Phaser.Scene {
@@ -82,11 +82,7 @@ export class BaseScene extends Phaser.Scene {
   create() {
     // TODO check if canvas
     // this.game.renderer.type === Phaser.CANVAS;
-
-    this.game.renderer.pipelines.add(
-      PIPELINE_GRAYSCALE,
-      new GrayscalePipeline(this.game)
-    );
+    this.grayscalePipeline = this.renderer.pipelines.get(PIPELINE_GRAYSCALE);
 
     this.baseObjectGroup = this.add.group();
 
@@ -134,7 +130,7 @@ export class BaseScene extends Phaser.Scene {
         pixelPerfect: true,
       })
       .setScale(2)
-      .setPipeline(PIPELINE_GRAYSCALE)
+      .setPipeline(this.grayscalePipeline)
       .play("flicker");
 
     this.tvText = this.add
@@ -165,7 +161,7 @@ export class BaseScene extends Phaser.Scene {
       )
       .setName("diplomasmall")
       .setScale(this.tv.scale)
-      .setPipeline(PIPELINE_GRAYSCALE)
+      .setPipeline(this.grayscalePipeline)
       .setOrigin(0.5)
       .setInteractive({
         useHandCursor: true,
@@ -208,7 +204,7 @@ export class BaseScene extends Phaser.Scene {
       )
       .setName("roomWindow")
       .setScale(this.tv.scale)
-      .setPipeline(PIPELINE_GRAYSCALE)
+      .setPipeline(this.grayscalePipeline)
       .setOrigin(0.5)
       .play("nightsky")
       .setInteractive({
@@ -238,7 +234,8 @@ export class BaseScene extends Phaser.Scene {
         window.innerHeight * 0.8,
         "githubicon"
       )
-      .setScale(2)
+      .setName("githubicon")
+      .setScale(this.tv.scale)
       .setTint(0xaaaaaa)
       .setInteractive({ useHandCursor: true, pixelPerfect: true })
       .setOrigin(1, 0.5);
@@ -252,23 +249,23 @@ export class BaseScene extends Phaser.Scene {
       .on("pointerup", () => {
         window.open("https://github.com/nick-wong", "_blank");
       });
-
     this.linkedin = this.add
-      .image(
+      .sprite(
         center.x + getWidthOffset(),
         window.innerHeight * 0.8,
         "linkedinicon"
       )
-      .setScale(2)
-      .setPipeline(PIPELINE_GRAYSCALE)
-      .setInteractive({ useHandCursor: true, pixelPerfect: true })
-      .setOrigin(0, 0.5);
+      .setName("linkedinicon")
+      .setScale(this.tv.scale)
+      .setPipeline(this.grayscalePipeline)
+      .setOrigin(0, 0.5)
+      .setInteractive({ useHandCursor: true, pixelPerfect: true });
     this.linkedin
       .on("pointerover", () => {
         this.linkedin.resetPipeline();
       })
       .on("pointerout", () => {
-        this.linkedin.setPipeline(PIPELINE_GRAYSCALE);
+        this.linkedin.setPipeline(this.grayscalePipeline);
       })
       .on("pointerup", () => {
         window.open("https://www.linkedin.com/in/nicholas-k-wong/", "_blank");
@@ -333,21 +330,20 @@ export class BaseScene extends Phaser.Scene {
       }
     });
     this.tv.on("pointerup", (pointer) => {
-      // TODO: zoom to object center positions when applicable
       const cam = this.cameras.main;
       // Remove glow
       this.tv.postFX.clear();
       this.tv.setDepth(99);
 
       if (cam.zoom === 1) {
-        //cam.pan(pointer.position.x, pointer.position.y, 1000);
-
         this.tweens.add({
           targets: this.tv,
           scale: 4,
           ease: "Sine.easeInOut",
           duration: 750,
         });
+
+        // zoom
         cam.zoomTo(
           getZoom(this.tv.width * 4, this.tv.height * 4 * 0.8, 1.2),
           750,
