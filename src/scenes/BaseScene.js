@@ -450,16 +450,31 @@ export class BaseScene extends Phaser.Scene {
           this.diploma.displayHeight * 1.1
         )
       );
+      this.diploma.lastClicked = 0;
+      this.diploma.previousScale = this.diploma.scale;
 
-      this.diploma.on("pointermove", (_, localX, localY) => {
-        const maxRotation = 1;
+      this.diploma
+        .on("pointermove", (_, localX, localY) => {
+          const maxRotation = 1;
 
-        // inverted based on 3d
-        this.diploma.modelRotation.x =
-          maxRotation * (localY / this.diploma.displayWidth / 2);
-        this.diploma.modelRotation.y =
-          maxRotation * (localX / this.diploma.displayHeight / 2);
-      });
+          // inverted based on 3d
+          this.diploma.modelRotation.x =
+            maxRotation * (localY / this.diploma.displayWidth / 2);
+          this.diploma.modelRotation.y =
+            maxRotation * (localX / this.diploma.displayHeight / 2);
+        })
+        .on("pointerup", () => {
+          // toggle zoom on double click
+          const clickDelay = this.time.now - this.diploma.lastClicked;
+          this.diploma.lastClicked = this.time.now;
+          if (clickDelay < 300) {
+            if (this.diploma.scale !== this.diploma.previousScale) {
+              this.diploma.setScale(this.diploma.previousScale);
+            } else {
+              this.diploma.setScale(this.diploma.scale * 1.25);
+            }
+          }
+        });
     });
 
     this.baseObjectGroup.addMultiple([
@@ -539,6 +554,7 @@ export class BaseScene extends Phaser.Scene {
             this.diploma.displayHeight * 1.1
           ) * this.diploma.scale
         );
+        this.diploma.previousScale = this.diploma.scale;
         this.diploma.setPosition(center.x, center.y);
       }
 
