@@ -8,14 +8,15 @@ export const getZoom = (width, height, min = 0) => {
 
 export const FontSizes = {
   XSMALL: 0,
-  SMALL: 1,
-  MEDIUM: 2,
-  LARGE: 3,
+  XSMALLTOSMALL: 1,
+  SMALL: 2,
+  MEDIUM: 3,
+  LARGE: 4,
 };
 
 export const getFontSize = (fontSize) => {
   if (window.innerWidth < 480 || window.innerHeight < 480) {
-    if (fontSize === FontSizes.XSMALL) {
+    if (fontSize === FontSizes.XSMALL || fontSize === FontSizes.XSMALLTOSMALL) {
       return "12px";
     } else if (fontSize === FontSizes.SMALL) {
       return "16px";
@@ -28,7 +29,10 @@ export const getFontSize = (fontSize) => {
   if (window.innerWidth < 768 || window.innerHeight < 640) {
     if (fontSize === FontSizes.XSMALL) {
       return "16px";
-    } else if (fontSize === FontSizes.SMALL) {
+    } else if (
+      fontSize === FontSizes.SMALL ||
+      fontSize === FontSizes.XSMALLTOSMALL
+    ) {
       return "18px";
     } else if (fontSize === FontSizes.MEDIUM) {
       return "28px";
@@ -38,7 +42,10 @@ export const getFontSize = (fontSize) => {
   } else {
     if (fontSize === FontSizes.XSMALL) {
       return "18px";
-    } else if (fontSize === FontSizes.SMALL) {
+    } else if (
+      fontSize === FontSizes.SMALL ||
+      fontSize === FontSizes.XSMALLTOSMALL
+    ) {
       return "24px";
     } else if (fontSize === FontSizes.MEDIUM) {
       return "36px";

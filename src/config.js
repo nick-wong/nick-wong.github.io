@@ -4,6 +4,7 @@ import { TVScene } from "./scenes/TVScene";
 import { TVSceneGun } from "./scenes/TVSceneGun";
 import { BackgroundScene } from "./scenes/BackgroundScene";
 import GrayScalePipeline from "./util/Pipelines";
+import { SpaceScene } from "./scenes/SpaceScene";
 
 export const config = {
   type: Phaser.AUTO,
@@ -29,6 +30,6 @@ export const config = {
     },
   },
   pipeline: { Gray: GrayScalePipeline },
-  scene: [BaseScene, BackgroundScene, TVScene, TVSceneGun],
+  scene: [BaseScene, BackgroundScene, TVScene, TVSceneGun, SpaceScene],
   pixelArt: true,
 };

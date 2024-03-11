@@ -1,5 +1,9 @@
 import { FontSizes, getFontSize } from "./Resize";
 
+export const resetCursor = (scene) => {
+  scene.input.setDefaultCursor("unset");
+};
+
 // create a back button with optional background
 export const createBackButton = (
   scene,
@@ -78,4 +82,9 @@ export const diplomaBackButton = (scene) => {
   scene.diploma.setVisible(false);
   scene.backButton.destroy();
   scene.backButtonFullBackground.destroy();
+};
+
+export const spaceBackButton = (scene) => {
+  scene.scene.sleep("SpaceScene");
+  scene.scene.wake("BaseScene");
 };

@@ -7,7 +7,7 @@ import {
   getZoom,
 } from "../util/Resize";
 
-import tv from "../assets/tv.png";
+// duck hunt
 import akisquirrel from "../assets/akisquirrel.png";
 import startzapper from "../assets/startgun.png";
 import target from "../assets/target.png";
@@ -15,14 +15,24 @@ import background from "../assets/duckhuntbg.png";
 import duckhuntgun from "../assets/duckhuntgun.png";
 import resetbutton from "../assets/resetbutton.png";
 import roundsign from "../assets/roundsign.png";
+// main room
+import tv from "../assets/tv.png";
 import diplomasmall from "../assets/diploma_small.png";
 import diploma from "../assets/diploma.png";
 import roomwindow from "../assets/window.png";
+// icons
 import githubicon from "../assets/icons/github.png";
 import linkedinicon from "../assets/icons/linkedin.png";
+// exp
+import unknownworld from "../assets/unknownworld.png";
+import worldselector from "../assets/worldselector.png";
 
 import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
-import { createBackButton, diplomaBackButton } from "../util/Helpers";
+import {
+  createBackButton,
+  diplomaBackButton,
+  resetCursor,
+} from "../util/Helpers";
 
 export class BaseScene extends Phaser.Scene {
   constructor() {
@@ -50,7 +60,7 @@ export class BaseScene extends Phaser.Scene {
       frameHeight: 53,
     });
 
-    // tv
+    // duck hunt
     this.load.spritesheet("startzapper", startzapper, {
       frameWidth: 30,
       frameHeight: 15,
@@ -64,19 +74,20 @@ export class BaseScene extends Phaser.Scene {
       frameHeight: 20,
     });
     this.load.image("background", background);
-
-    // zapper
     this.load.spritesheet("duckhuntgun", duckhuntgun, {
       frameWidth: 75,
       frameHeight: 120,
     });
-
     this.load.image("resetbutton", resetbutton);
     this.load.image("roundsign", roundsign);
 
     // icons
     this.load.image("githubicon", githubicon);
     this.load.image("linkedinicon", linkedinicon);
+
+    // exp
+    this.load.image("unknownworld", unknownworld);
+    this.load.image("worldselector", worldselector);
   }
 
   create() {
@@ -303,9 +314,16 @@ export class BaseScene extends Phaser.Scene {
           duration: 750,
         });
         warpTween.on("complete", () => {
-          cam.flash();
+          resetCursor(this);
+          // todo: remove and let flash when launching
+          this.cameras.main.flash();
 
-          // todo: launch exp stuff
+          // launch exp stuff
+          /*
+          this.scene.isSleeping("SpaceScene")
+            ? this.scene.wake("SpaceScene")
+            : this.scene.launch("SpaceScene");
+          */
 
           // reset camera
           cam.setZoom(1);
@@ -315,6 +333,8 @@ export class BaseScene extends Phaser.Scene {
           // remove grayscale and show text
           this.roomWindow.resetPipeline();
           this.windowText.setText(["experience", "(wip)"]);
+
+          //this.scene.sleep();
         });
       });
 
@@ -326,7 +346,7 @@ export class BaseScene extends Phaser.Scene {
         gameObject.name === "roomWindow"
       ) {
         gameObject.postFX.clear();
-        this.input.setDefaultCursor("unset");
+        resetCursor(this);
       }
     });
     this.tv.on("pointerup", (pointer) => {
@@ -349,7 +369,7 @@ export class BaseScene extends Phaser.Scene {
           750,
           "Linear",
           false,
-          (camera, progress) => {
+          (_, progress) => {
             this.moveTvText();
             if (progress === 1) {
               // remove grayscale and show text
@@ -419,6 +439,7 @@ export class BaseScene extends Phaser.Scene {
       this.diplomaSmall.resetPipeline();
       this.diplomaText.setText("education");
 
+      // create and launch interactive diploma
       createBackButton(this, diplomaBackButton, true);
       this.diploma = this.add
         .plane(window.innerWidth / 2, window.innerHeight / 2, "diploma")
@@ -449,6 +470,8 @@ export class BaseScene extends Phaser.Scene {
       this.diplomaText,
       this.roomWindow,
       this.windowText,
+      this.github,
+      this.linkedin,
     ]);
     this.scale.on("resize", this.resize, this);
   }
@@ -567,7 +590,7 @@ export class BaseScene extends Phaser.Scene {
     }
 
     // Reset cursor
-    this.input.setDefaultCursor("unset");
+    resetCursor(this);
 
     this.tv.play("flicker");
     this.tv.input.cursor = "pointer";

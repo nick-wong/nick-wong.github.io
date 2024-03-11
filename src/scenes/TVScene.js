@@ -325,7 +325,7 @@ export class TVScene extends Phaser.Scene {
         currentRound.text,
         {
           fontFamily: "Manaspace",
-          fontSize: getFontSize(FontSizes.XSMALL),
+          fontSize: getFontSize(FontSizes.XSMALLTOSMALL),
           align: "left",
           resolution: 20,
         }
@@ -361,7 +361,7 @@ export class TVScene extends Phaser.Scene {
         ["round", this.getRoundNumber()],
         {
           fontFamily: "Manaspace",
-          fontSize: getFontSize(FontSizes.SMALL),
+          fontSize: getFontSize(FontSizes.XSMALLTOSMALL),
           align: "center",
           resolution: 20,
         }
@@ -613,7 +613,9 @@ export class TVScene extends Phaser.Scene {
           this.sky.x - this.sky.width * 0.4,
           this.sky.y + this.sky.height * 0.35
         );
-        this.gameState.roundText.setFontSize(getFontSize(FontSizes.XSMALL));
+        this.gameState.roundText.setFontSize(
+          getFontSize(FontSizes.XSMALLTOSMALL)
+        );
       }
 
       // start screen
