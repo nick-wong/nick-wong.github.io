@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.90769cd2.css",
-    "main.js": "/static/js/main.a7bfdf78.js",
+    "main.js": "/static/js/main.3b137109.js",
     "static/media/diploma.png": "/static/media/diploma.cc2fa83f3361ff05d76d.png",
     "static/media/manaspc.ttf": "/static/media/manaspc.0d8565d99646c0054f84.ttf",
     "static/media/duckhuntbg.png": "/static/media/duckhuntbg.71560f9284f700937d10.png",
@@ -9,8 +9,10 @@
     "static/media/tv.png": "/static/media/tv.fcb24b8c030b81a6544c.png",
     "static/media/duckhuntgun.png": "/static/media/duckhuntgun.61975be356986537ed71.png",
     "static/media/window.png": "/static/media/window.fc15771a16558b626d67.png",
+    "static/media/worldselector.png": "/static/media/worldselector.fa5c62355bf628c8b0d1.png",
     "index.html": "/index.html",
     "static/media/startgun.png": "/static/media/startgun.c30b3d62669982d3bcf1.png",
+    "static/media/unknownworld.png": "/static/media/unknownworld.d4fe93c52398544e896e.png",
     "static/media/github.png": "/static/media/github.a61ab9d12aa5405b43f6.png",
     "static/media/resetbutton.png": "/static/media/resetbutton.1150f69d4e2c96b5a7e7.png",
     "static/media/target.png": "/static/media/target.64c2e5b51ed533fdac33.png",
@@ -19,10 +21,10 @@
     "static/media/roundsign.png": "/static/media/roundsign.28d6c76e3cd7c7686258.png",
     "static/media/crosshair.png": "/static/media/crosshair.edc458a79a1bbad3fcdc.png",
     "main.90769cd2.css.map": "/static/css/main.90769cd2.css.map",
-    "main.a7bfdf78.js.map": "/static/js/main.a7bfdf78.js.map"
+    "main.3b137109.js.map": "/static/js/main.3b137109.js.map"
   },
   "entrypoints": [
     "static/css/main.90769cd2.css",
-    "static/js/main.a7bfdf78.js"
+    "static/js/main.3b137109.js"
   ]
 }
