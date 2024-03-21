@@ -7,7 +7,7 @@ export class BackgroundScene extends Phaser.Scene {
   preload() {}
 
   create() {
-    this.cameras.main.setBackgroundColor("0x2f2f2f");
+    this.cameras.main.setBackgroundColor(0x292929);
   }
 
   update() {}

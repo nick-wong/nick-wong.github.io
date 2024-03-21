@@ -8,30 +8,40 @@ import {
 } from "../util/Resize";
 
 // duck hunt
-import akisquirrel from "../assets/akisquirrel.png";
-import startzapper from "../assets/startgun.png";
-import target from "../assets/target.png";
-import background from "../assets/duckhuntbg.png";
-import duckhuntgun from "../assets/duckhuntgun.png";
-import resetbutton from "../assets/resetbutton.png";
-import roundsign from "../assets/roundsign.png";
+import akisquirrel from "../assets/skillhunt/akisquirrel.png";
+import startzapper from "../assets/skillhunt/startgun.png";
+import target from "../assets/skillhunt/target.png";
+import background from "../assets/skillhunt/duckhuntbg.png";
+import duckhuntgun from "../assets/skillhunt/duckhuntgun.png";
+import resetbutton from "../assets/skillhunt/resetbutton.png";
+import roundsign from "../assets/skillhunt/roundsign.png";
 // main room
 import tv from "../assets/tv.png";
 import diplomasmall from "../assets/diploma_small.png";
-import diploma from "../assets/diploma.png";
 import roomwindow from "../assets/window.png";
+// edu
+import diploma from "../assets/education/diploma.png";
 // icons
 import githubicon from "../assets/icons/github.png";
 import linkedinicon from "../assets/icons/linkedin.png";
 // exp
-import unknownworld from "../assets/unknownworld.png";
-import worldselector from "../assets/worldselector.png";
+import unknownworld from "../assets/experience/unknownworld.png";
+import worldselector from "../assets/experience/worldselector.png";
+import starparticle from "../assets/experience/starparticle.png";
+import worldbackground from "../assets/experience/worldbackground.png";
+import worldpath from "../assets/experience/worldpath.png";
+import worlds from "../assets/experience/worlds.png";
+import worldtitle from "../assets/experience/worldtitle.png";
+import worldinfobox from "../assets/experience/worldinfobox.png";
+import worldinfoboxspecial from "../assets/experience/worldinfoboxspecial.png";
+import worldlevelstar from "../assets/experience/worldlevelstar.png";
 
 import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import {
   createBackButton,
   diplomaBackButton,
   resetCursor,
+  resizeBackButton,
 } from "../util/Helpers";
 
 export class BaseScene extends Phaser.Scene {
@@ -87,7 +97,21 @@ export class BaseScene extends Phaser.Scene {
 
     // exp
     this.load.image("unknownworld", unknownworld);
-    this.load.image("worldselector", worldselector);
+    this.load.image("starparticle", starparticle);
+    this.load.image("worldbackground", worldbackground);
+    this.load.image("worldpath", worldpath);
+    this.load.image("worldtitle", worldtitle);
+    this.load.image("worldinfobox", worldinfobox);
+    this.load.image("worldinfoboxspecial", worldinfoboxspecial);
+    this.load.image("worldlevelstar", worldlevelstar);
+    this.load.spritesheet("worldselector", worldselector, {
+      frameWidth: 80,
+      frameHeight: 80,
+    });
+    this.load.spritesheet("worlds", worlds, {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
   }
 
   create() {
@@ -103,12 +127,19 @@ export class BaseScene extends Phaser.Scene {
     this.scene.sendToBack("BackgroundScene");
 
     this.title = this.add
-      .text(center.x, window.innerHeight / 5, "nick wong", {
-        fontFamily: "Manaspace",
-        fontSize: getFontSize(FontSizes.MEDIUM),
-        align: "center",
-        resolution: 20,
-      })
+      .text(
+        center.x,
+        window.innerHeight > 400
+          ? window.innerHeight / 5
+          : window.innerHeight / 10,
+        "nick wong",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.MEDIUM),
+          align: "center",
+          resolution: 20,
+        }
+      )
       .setName("title")
       .setOrigin(0.5); // position is center
 
@@ -242,7 +273,9 @@ export class BaseScene extends Phaser.Scene {
     this.github = this.add
       .image(
         center.x - getWidthOffset(),
-        window.innerHeight * 0.8,
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9,
         "githubicon"
       )
       .setName("githubicon")
@@ -263,7 +296,9 @@ export class BaseScene extends Phaser.Scene {
     this.linkedin = this.add
       .sprite(
         center.x + getWidthOffset(),
-        window.innerHeight * 0.8,
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9,
         "linkedinicon"
       )
       .setName("linkedinicon")
@@ -315,26 +350,24 @@ export class BaseScene extends Phaser.Scene {
         });
         warpTween.on("complete", () => {
           resetCursor(this);
-          // todo: remove and let flash when launching
-          this.cameras.main.flash();
+          this.scene.sleep();
 
           // launch exp stuff
-          /*
           this.scene.isSleeping("SpaceScene")
             ? this.scene.wake("SpaceScene")
             : this.scene.launch("SpaceScene");
-          */
 
-          // reset camera
-          cam.setZoom(1);
-          cam.setRotation(0);
-          cam.setScroll(0);
+          setTimeout(() => {
+            // reset camera
+            cam.setZoom(1);
+            cam.setRotation(0);
+            cam.setScroll(0);
+          }, 250);
 
           // remove grayscale and show text
           this.roomWindow.resetPipeline();
-          this.windowText.setText(["experience", "(wip)"]);
-
-          //this.scene.sleep();
+          this.roomWindow.clearFX();
+          this.windowText.setText("experience");
         });
       });
 
@@ -525,7 +558,12 @@ export class BaseScene extends Phaser.Scene {
           )
         );
       }
-      this.title.setPosition(window.innerWidth / 2, window.innerHeight / 5);
+      this.title.setPosition(
+        window.innerWidth / 2,
+        window.innerHeight > 400
+          ? window.innerHeight / 5
+          : window.innerHeight / 10
+      );
       this.title.setFontSize(getFontSize(FontSizes.MEDIUM));
 
       if (this.closeUpGun) {
@@ -533,6 +571,7 @@ export class BaseScene extends Phaser.Scene {
       }
 
       // diploma
+      resizeBackButton(this);
       this.diplomaSmall.setPosition(
         center.x -
           (window.innerWidth < 480
@@ -575,11 +614,15 @@ export class BaseScene extends Phaser.Scene {
       // icons
       this.github.setPosition(
         center.x - getWidthOffset(),
-        window.innerHeight * 0.8
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9
       );
       this.linkedin.setPosition(
         center.x + getWidthOffset(),
-        window.innerHeight * 0.8
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9
       );
 
       /* Last resort nuke it
@@ -626,5 +669,13 @@ export class BaseScene extends Phaser.Scene {
       ease: "Sine.easeInOut",
       duration: 750,
     });
+  }
+
+  resetCamera() {
+    // reset cameraa
+    this.cameras.main.setZoom(1);
+    this.cameras.main.setRotation(0);
+    this.cameras.main.setScroll(0);
+    resetCursor(this);
   }
 }

@@ -6,17 +6,27 @@ export const getZoom = (width, height, min = 0) => {
   );
 };
 
+export const backgroundCover = (width, height) => {
+  return Math.max(window.innerWidth / width, window.innerHeight / height);
+};
+
 export const FontSizes = {
-  XSMALL: 0,
-  XSMALLTOSMALL: 1,
-  SMALL: 2,
-  MEDIUM: 3,
-  LARGE: 4,
+  XXSMALL: 0,
+  XSMALL: 1,
+  XSMALLTOSMALL: 2,
+  SMALL: 3,
+  MEDIUM: 4,
+  LARGE: 5,
 };
 
 export const getFontSize = (fontSize) => {
   if (window.innerWidth < 480 || window.innerHeight < 480) {
-    if (fontSize === FontSizes.XSMALL || fontSize === FontSizes.XSMALLTOSMALL) {
+    if (fontSize === FontSizes.XXSMALL) {
+      return "8px";
+    } else if (
+      fontSize === FontSizes.XSMALL ||
+      fontSize === FontSizes.XSMALLTOSMALL
+    ) {
       return "12px";
     } else if (fontSize === FontSizes.SMALL) {
       return "16px";
@@ -27,7 +37,9 @@ export const getFontSize = (fontSize) => {
     }
   }
   if (window.innerWidth < 768 || window.innerHeight < 640) {
-    if (fontSize === FontSizes.XSMALL) {
+    if (fontSize === FontSizes.XXSMALL) {
+      return "10px";
+    } else if (fontSize === FontSizes.XSMALL) {
       return "16px";
     } else if (
       fontSize === FontSizes.SMALL ||
@@ -40,7 +52,9 @@ export const getFontSize = (fontSize) => {
       return "32px";
     }
   } else {
-    if (fontSize === FontSizes.XSMALL) {
+    if (fontSize === FontSizes.XXSMALL) {
+      return "12px";
+    } else if (fontSize === FontSizes.XSMALL) {
       return "18px";
     } else if (
       fontSize === FontSizes.SMALL ||

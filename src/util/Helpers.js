@@ -8,7 +8,8 @@ export const resetCursor = (scene) => {
 export const createBackButton = (
   scene,
   onBackButtonClick,
-  fullBackgroundClickable = false
+  fullBackgroundClickable = false,
+  useHandCursor = true
 ) => {
   const backButtonTintColor = 0xfcc200;
 
@@ -23,7 +24,7 @@ export const createBackButton = (
     .setName("backButton")
     .setDepth(100)
     .setInteractive({
-      useHandCursor: true,
+      useHandCursor: useHandCursor,
     });
 
   // Back button Events
@@ -59,10 +60,10 @@ export const createBackButton = (
   }
 };
 
-export const resizeBackButton = () => {
+export const resizeBackButton = (scene) => {
   // back button
-  if (this.backButton) {
-    this.backButton.setFontSize(getFontSize(FontSizes.LARGE));
+  if (scene.backButton?.active) {
+    scene.backButton.setFontSize(getFontSize(FontSizes.LARGE));
   }
 };
 
@@ -87,4 +88,5 @@ export const diplomaBackButton = (scene) => {
 export const spaceBackButton = (scene) => {
   scene.scene.sleep("SpaceScene");
   scene.scene.wake("BaseScene");
+  scene.scene.get("BaseScene").resetCamera();
 };

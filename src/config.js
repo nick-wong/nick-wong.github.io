@@ -32,4 +32,7 @@ export const config = {
   pipeline: { Gray: GrayScalePipeline },
   scene: [BaseScene, BackgroundScene, TVScene, TVSceneGun, SpaceScene],
   pixelArt: true,
+  fps: {
+    target: 30,
+  },
 };

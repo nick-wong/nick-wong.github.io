@@ -1,8 +1,12 @@
 import Phaser from "phaser";
 import { FontSizes, getFontSize, getZoom } from "../util/Resize";
 
-import crosshair from "../assets/crosshair.png";
-import { createBackButton, tvBackButton } from "../util/Helpers";
+import crosshair from "../assets/skillhunt/crosshair.png";
+import {
+  createBackButton,
+  resizeBackButton,
+  tvBackButton,
+} from "../util/Helpers";
 
 const GAME_STATES = {
   NOT_STARTED: 0,
@@ -520,6 +524,8 @@ export class TVScene extends Phaser.Scene {
 
   resize(gameSize, baseSize, displaySize, resolution) {
     if (window.innerWidth > 240 && window.innerHeight > 240) {
+      resizeBackButton(this);
+
       // update scenery
       this.scenery.setPosition(window.innerWidth / 2, window.innerHeight / 2);
       this.scenery.setScale(
