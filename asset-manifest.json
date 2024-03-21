@@ -1,17 +1,23 @@
 {
   "files": {
     "main.css": "/static/css/main.90769cd2.css",
-    "main.js": "/static/js/main.3b137109.js",
+    "main.js": "/static/js/main.9387fc03.js",
+    "static/media/worldbackground.png": "/static/media/worldbackground.3f6750cc5609c6097c00.png",
+    "static/media/worlds.png": "/static/media/worlds.546baeb80f525dde9d16.png",
+    "static/media/worldpath.png": "/static/media/worldpath.3fca30148c967a1b0016.png",
     "static/media/diploma.png": "/static/media/diploma.cc2fa83f3361ff05d76d.png",
     "static/media/manaspc.ttf": "/static/media/manaspc.0d8565d99646c0054f84.ttf",
     "static/media/duckhuntbg.png": "/static/media/duckhuntbg.71560f9284f700937d10.png",
     "static/media/akisquirrel.png": "/static/media/akisquirrel.bad71d326ae05a0ce669.png",
     "static/media/tv.png": "/static/media/tv.fcb24b8c030b81a6544c.png",
+    "static/media/worldinfobox.png": "/static/media/worldinfobox.63ebd2bcf4a62f66702a.png",
+    "static/media/worldinfoboxspecial.png": "/static/media/worldinfoboxspecial.102bf58d9fe0f7818d6a.png",
+    "static/media/worldselector.png": "/static/media/worldselector.9a6d1df73905e8d9ace2.png",
     "static/media/duckhuntgun.png": "/static/media/duckhuntgun.61975be356986537ed71.png",
     "static/media/window.png": "/static/media/window.fc15771a16558b626d67.png",
-    "static/media/worldselector.png": "/static/media/worldselector.fa5c62355bf628c8b0d1.png",
     "index.html": "/index.html",
     "static/media/startgun.png": "/static/media/startgun.c30b3d62669982d3bcf1.png",
+    "static/media/worldtitle.png": "/static/media/worldtitle.2ae2c0d5740b69acb04c.png",
     "static/media/unknownworld.png": "/static/media/unknownworld.d4fe93c52398544e896e.png",
     "static/media/github.png": "/static/media/github.a61ab9d12aa5405b43f6.png",
     "static/media/resetbutton.png": "/static/media/resetbutton.1150f69d4e2c96b5a7e7.png",
@@ -19,12 +25,14 @@
     "static/media/diploma_small.png": "/static/media/diploma_small.21f8ca9377c805c65ba3.png",
     "static/media/linkedin.png": "/static/media/linkedin.cd64b30a3904439d0609.png",
     "static/media/roundsign.png": "/static/media/roundsign.28d6c76e3cd7c7686258.png",
+    "static/media/worldlevelstar.png": "/static/media/worldlevelstar.b16fe1fdbd663c2b1b65.png",
+    "static/media/starparticle.png": "/static/media/starparticle.d3f8fe500c5165772689.png",
     "static/media/crosshair.png": "/static/media/crosshair.edc458a79a1bbad3fcdc.png",
     "main.90769cd2.css.map": "/static/css/main.90769cd2.css.map",
-    "main.3b137109.js.map": "/static/js/main.3b137109.js.map"
+    "main.9387fc03.js.map": "/static/js/main.9387fc03.js.map"
   },
   "entrypoints": [
     "static/css/main.90769cd2.css",
-    "static/js/main.3b137109.js"
+    "static/js/main.9387fc03.js"
   ]
 }
