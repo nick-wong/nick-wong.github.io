@@ -238,8 +238,8 @@ export class SpaceScene extends Phaser.Scene {
     });
     this.worldSelector = this.add
       .sprite(
-        this.game.input.mousePointer.x,
-        this.game.input.mousePointer.y,
+        this.input.x === 0 ? window.innerWidth / 2 : this.input.x,
+        this.input.y === 0 ? window.innerHeight / 2 : this.input.y,
         "worldselector"
       )
       .setScale(2)
@@ -429,8 +429,8 @@ export class SpaceScene extends Phaser.Scene {
       this.cameras.main.flash();
       this.useWorldSelectorCursor();
       this.worldSelector.setPosition(
-        this.game.input.mousePointer.x,
-        this.game.input.mousePointer.y
+        this.input.x === 0 ? window.innerWidth / 2 : this.input.x,
+        this.input.y === 0 ? window.innerHeight / 2 : this.input.y
       );
     });
 
