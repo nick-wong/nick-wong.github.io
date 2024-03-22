@@ -90,6 +90,8 @@ export class SpaceScene extends Phaser.Scene {
 
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     createBackButton(this, spaceBackButton, false, false);
+    this.backButton.setPosition(10, window.innerHeight / 20);
+    this.backButton.setOrigin(0, 0.5);
 
     this.worldBackground = this.add
       .image(center.x, center.y, "worldbackground")
@@ -255,12 +257,12 @@ export class SpaceScene extends Phaser.Scene {
       if (!this.checkForCloseWorldAndShowData()) {
         this.worldDataGroup?.destroy(true, true);
 
-        // move objects
+        // move objects if within bounds
         if (
-          pointer.x < window.innerWidth * 0.1 ||
-          pointer.x > window.innerWidth * 0.9 ||
-          pointer.y < window.innerHeight * 0.1 ||
-          pointer.y > window.innerHeight * 0.9
+          pointer.x < window.innerWidth * 0.15 ||
+          pointer.x > window.innerWidth * 0.85 ||
+          pointer.y < window.innerHeight * 0.15 ||
+          pointer.y > window.innerHeight * 0.85
         ) {
           if (!this.scrollInterval?.callback) {
             this.scrollInterval = this.time.addEvent({
@@ -340,7 +342,7 @@ export class SpaceScene extends Phaser.Scene {
         0x000000,
         0.5
       )
-      .setInteractive()
+      //.setInteractive({ cursor: "unset" })
       .setScrollFactor(0, 0);
     this.topBorderLine = this.add
       .line(
@@ -363,6 +365,7 @@ export class SpaceScene extends Phaser.Scene {
         0x000000,
         0.5
       )
+      //.setInteractive({ cursor: "unset" })
       .setScrollFactor(0, 0);
     this.bottomBorderLine = this.add
       .line(
@@ -376,6 +379,48 @@ export class SpaceScene extends Phaser.Scene {
       )
       .setLineWidth(3)
       .setScrollFactor(0, 0);
+
+    const lgFontSize = getFontSize(FontSizes.LARGE);
+    const chevronHeight = Number(
+      lgFontSize.substring(0, lgFontSize.indexOf("px"))
+    );
+    this.topBorderRightChevrons = this.add
+      .image(window.innerWidth - 10, window.innerHeight * 0.95, "worldchevron")
+      .setFlipX(true)
+      .setOrigin(1, 0.5);
+    this.topBorderRightChevrons.setDisplaySize(
+      (this.topBorderRightChevrons.width / this.topBorderRightChevrons.height) *
+        chevronHeight,
+      chevronHeight
+    );
+    this.topBorderText = this.add
+      .text(
+        window.innerWidth - 10 - this.topBorderRightChevrons.displayWidth,
+        window.innerHeight * 0.95,
+        " select exp ",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.LARGE),
+          align: "left",
+          resolution: 20,
+        }
+      )
+      .setOrigin(1, 0.5);
+    this.topBorderLeftChevrons = this.add
+      .image(
+        window.innerWidth -
+          10 -
+          this.topBorderRightChevrons.displayWidth -
+          this.topBorderText.displayWidth,
+        window.innerHeight * 0.95,
+        "worldchevron"
+      )
+      .setOrigin(1, 0.5);
+    this.topBorderLeftChevrons.setDisplaySize(
+      (this.topBorderLeftChevrons.width / this.topBorderLeftChevrons.height) *
+        chevronHeight,
+      chevronHeight
+    );
 
     // resize events
     this.scale.on("resize", this.resize, this);
@@ -524,6 +569,31 @@ export class SpaceScene extends Phaser.Scene {
       worldTitleText,
       ...starsGroup.getChildren(),
     ]);
+
+    /*
+    // wip: snap into screen
+    const titleDistToEdgeX = worldTitle.x - worldTitle.displayWidth;
+    const titleDistToEdgeY =
+      worldTitle.y - worldTitle.displayHeight - window.innerHeight / 10;
+    if (titleDistToEdgeX < 0 || titleDistToEdgeY < 0) {
+      const diffX = titleDistToEdgeX < 0 ? Math.abs(titleDistToEdgeX) : 0;
+      const diffY = titleDistToEdgeY < 0 ? Math.abs(titleDistToEdgeY) : 0;
+      this.worldDataGroup.getChildren().forEach((dataItem) => {
+        dataItem.x += diffX;
+        dataItem.y += diffY;
+      });
+      this.mapGroup.getChildren().forEach((mapItem) => {
+        mapItem.x += diffX;
+        mapItem.y += diffY;
+        if (mapItem.getData("type") === "world") {
+          mapItem.setData("x", mapItem.x);
+          mapItem.setData("y", mapItem.y);
+        }
+      });
+
+      this.scrollInterval?.destroy();
+    }
+    */
   }
 
   useWorldSelectorCursor() {
@@ -622,6 +692,8 @@ export class SpaceScene extends Phaser.Scene {
     if (window.innerWidth > 240 && window.innerHeight > 240) {
       // back button
       resizeBackButton(this);
+      this.backButton.setPosition(10, window.innerHeight / 20);
+      this.backButton.setOrigin(0, 0.5);
 
       // background
       this.worldBackground.setScale(
@@ -632,7 +704,7 @@ export class SpaceScene extends Phaser.Scene {
         window.innerHeight / 2
       );
 
-      // center world
+      // wip: center world
       /*
       this.path.setPosition(window.innerWidth / 2, window.innerHeight / 2);
       this.scrollInterval?.remove();
@@ -664,6 +736,36 @@ export class SpaceScene extends Phaser.Scene {
       this.bottomBorderLine.setPosition(
         window.innerWidth * 0.5,
         window.innerHeight * 0.9
+      );
+
+      this.topBorderText.setPosition(
+        window.innerWidth - 10 - this.topBorderRightChevrons.displayWidth,
+        window.innerHeight * 0.95
+      );
+      this.topBorderText.setFontSize(getFontSize(FontSizes.LARGE));
+
+      const chevronHeight = this.topBorderText.height;
+      this.topBorderRightChevrons.setPosition(
+        window.innerWidth - 10,
+        window.innerHeight * 0.95
+      );
+      this.topBorderRightChevrons.setDisplaySize(
+        (this.topBorderRightChevrons.width /
+          this.topBorderRightChevrons.height) *
+          chevronHeight,
+        chevronHeight
+      );
+      this.topBorderLeftChevrons.setPosition(
+        window.innerWidth -
+          10 -
+          this.topBorderRightChevrons.displayWidth -
+          this.topBorderText.displayWidth,
+        window.innerHeight * 0.95
+      );
+      this.topBorderLeftChevrons.setDisplaySize(
+        (this.topBorderLeftChevrons.width / this.topBorderLeftChevrons.height) *
+          chevronHeight,
+        chevronHeight
       );
     }
   }

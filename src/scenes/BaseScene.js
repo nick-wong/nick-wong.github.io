@@ -35,6 +35,7 @@ import worldtitle from "../assets/experience/worldtitle.png";
 import worldinfobox from "../assets/experience/worldinfobox.png";
 import worldinfoboxspecial from "../assets/experience/worldinfoboxspecial.png";
 import worldlevelstar from "../assets/experience/worldlevelstar.png";
+import worldchevron from "../assets/experience/worldchevron.png";
 
 import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import {
@@ -104,6 +105,7 @@ export class BaseScene extends Phaser.Scene {
     this.load.image("worldinfobox", worldinfobox);
     this.load.image("worldinfoboxspecial", worldinfoboxspecial);
     this.load.image("worldlevelstar", worldlevelstar);
+    this.load.image("worldchevron", worldchevron);
     this.load.spritesheet("worldselector", worldselector, {
       frameWidth: 80,
       frameHeight: 80,
