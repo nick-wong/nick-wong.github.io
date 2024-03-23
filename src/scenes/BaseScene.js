@@ -627,6 +627,9 @@ export class BaseScene extends Phaser.Scene {
           : window.innerHeight * 0.9
       );
 
+      // fix scrolling while zooming in/out
+      this.cameras.main.setScroll(0, 0);
+
       /* Last resort nuke it
       for (const scene of this.scene.manager.getScenes(false)) {
         scene.scene.stop();
