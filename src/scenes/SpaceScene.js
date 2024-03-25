@@ -248,6 +248,15 @@ export class SpaceScene extends Phaser.Scene {
       .play("base");
 
     this.mapGroup.add(this.path);
+    // start with first world centered
+    this.mapGroup.getChildren().forEach((mapItem) => {
+      mapItem.x -= WORLDS[2].position.xOffset;
+      mapItem.y -= WORLDS[2].position.yOffset;
+      if (mapItem.getData("type") === "world") {
+        mapItem.setData("x", mapItem.x);
+        mapItem.setData("y", mapItem.y);
+      }
+    });
 
     this.input.on("pointermove", (pointer) => {
       this.worldSelector.x = pointer.x;
@@ -283,13 +292,13 @@ export class SpaceScene extends Phaser.Scene {
                 const xMultiplier =
                   pointerVector.x < window.innerWidth * 0.1 ||
                   pointerVector.x > window.innerWidth * 0.9
-                    ? 2
-                    : 1;
+                    ? 3
+                    : 2;
                 const yMultiplier =
                   pointerVector.y < window.innerHeight * 0.1 ||
                   pointerVector.y > window.innerHeight * 0.9
-                    ? 2
-                    : 1;
+                    ? 3
+                    : 2;
 
                 const normalizedDiff = centerVector
                   .subtract(pointerVector)
