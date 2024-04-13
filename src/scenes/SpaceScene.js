@@ -248,10 +248,14 @@ export class SpaceScene extends Phaser.Scene {
       .play("base");
 
     this.mapGroup.add(this.path);
-    // start with first world centered
+    // start with first world centered if doesn't fit
+
+    const shouldCenterOnFirstWorld =
+      this.path.displayWidth > window.innerWidth ||
+      this.path.displayHeight > window.innerHeight * 0.9; // account for borders
     this.mapGroup.getChildren().forEach((mapItem) => {
-      mapItem.x -= WORLDS[2].position.xOffset;
-      mapItem.y -= WORLDS[2].position.yOffset;
+      mapItem.x -= shouldCenterOnFirstWorld ? WORLDS[2].position.xOffset : 0;
+      mapItem.y -= shouldCenterOnFirstWorld ? WORLDS[2].position.yOffset : 0;
       if (mapItem.getData("type") === "world") {
         mapItem.setData("x", mapItem.x);
         mapItem.setData("y", mapItem.y);
@@ -578,31 +582,6 @@ export class SpaceScene extends Phaser.Scene {
       worldTitleText,
       ...starsGroup.getChildren(),
     ]);
-
-    /*
-    // wip: snap into screen
-    const titleDistToEdgeX = worldTitle.x - worldTitle.displayWidth;
-    const titleDistToEdgeY =
-      worldTitle.y - worldTitle.displayHeight - window.innerHeight / 10;
-    if (titleDistToEdgeX < 0 || titleDistToEdgeY < 0) {
-      const diffX = titleDistToEdgeX < 0 ? Math.abs(titleDistToEdgeX) : 0;
-      const diffY = titleDistToEdgeY < 0 ? Math.abs(titleDistToEdgeY) : 0;
-      this.worldDataGroup.getChildren().forEach((dataItem) => {
-        dataItem.x += diffX;
-        dataItem.y += diffY;
-      });
-      this.mapGroup.getChildren().forEach((mapItem) => {
-        mapItem.x += diffX;
-        mapItem.y += diffY;
-        if (mapItem.getData("type") === "world") {
-          mapItem.setData("x", mapItem.x);
-          mapItem.setData("y", mapItem.y);
-        }
-      });
-
-      this.scrollInterval?.destroy();
-    }
-    */
   }
 
   useWorldSelectorCursor() {
