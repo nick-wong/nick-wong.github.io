@@ -612,7 +612,7 @@ export class BaseScene extends Phaser.Scene {
       createBackButton(this, carouselBackButton, {
         fullBackgroundClickable: true,
         color: 0x1c2833,
-        alpha: 0.75,
+        alpha: 0.98,
       });
 
       if (!this.projectCarouselCreated) {
