@@ -89,7 +89,12 @@ export class SpaceScene extends Phaser.Scene {
     this.cameras.main.flash(500);
 
     const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    createBackButton(this, spaceBackButton, false, false);
+    createBackButton(
+      this,
+      spaceBackButton,
+      { fullBackgroundClickable: false },
+      false
+    );
     this.backButton.setPosition(10, window.innerHeight / 20);
     this.backButton.setOrigin(0, 0.5);
 

@@ -19,6 +19,7 @@ import roundsign from "../assets/skillhunt/roundsign.png";
 import tv from "../assets/tv.png";
 import diplomasmall from "../assets/diploma_small.png";
 import roomwindow from "../assets/window.png";
+import shelfsmall from "../assets/shelf_small.png";
 // edu
 import diploma from "../assets/education/diploma.png";
 // icons
@@ -36,11 +37,18 @@ import worldinfobox from "../assets/experience/worldinfobox.png";
 import worldinfoboxspecial from "../assets/experience/worldinfoboxspecial.png";
 import worldlevelstar from "../assets/experience/worldlevelstar.png";
 import worldchevron from "../assets/experience/worldchevron.png";
+// projects
+import balloonatics from "../assets/projects/balloonatics.png";
+import bspokr from "../assets/projects/bspokr.png";
+import wistaria from "../assets/projects/wistaria.png";
 
 import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import {
+  carouselBackButton,
   createBackButton,
+  createCarousel,
   diplomaBackButton,
+  getCarouselDisplaySize,
   resetCursor,
   resizeBackButton,
 } from "../util/Helpers";
@@ -70,6 +78,7 @@ export class BaseScene extends Phaser.Scene {
       frameWidth: 53,
       frameHeight: 53,
     });
+    this.load.image("shelfsmall", shelfsmall);
 
     // duck hunt
     this.load.spritesheet("startzapper", startzapper, {
@@ -113,6 +122,20 @@ export class BaseScene extends Phaser.Scene {
     this.load.spritesheet("worlds", worlds, {
       frameWidth: 64,
       frameHeight: 64,
+    });
+
+    // projects
+    this.load.spritesheet("balloonatics", balloonatics, {
+      frameWidth: 60,
+      frameHeight: 110,
+    });
+    this.load.spritesheet("bspokr", bspokr, {
+      frameWidth: 90,
+      frameHeight: 70,
+    });
+    this.load.spritesheet("wistaria", wistaria, {
+      frameWidth: 108,
+      frameHeight: 108,
     });
   }
 
@@ -198,8 +221,8 @@ export class BaseScene extends Phaser.Scene {
       .image(
         center.x -
           (window.innerWidth < 480
-            ? window.innerWidth / 3
-            : this.tv.width + window.innerWidth / 10),
+            ? window.innerWidth * 0.4
+            : this.tv.width + window.innerWidth / 7),
         center.y - window.innerHeight / 10,
         "diplomasmall"
       )
@@ -211,6 +234,7 @@ export class BaseScene extends Phaser.Scene {
         useHandCursor: true,
         pixelPerfect: true,
       });
+    this.diplomaSmall.postFX.addShine(0.25, 0.25, 5);
 
     this.diplomaText = this.add
       .text(
@@ -260,6 +284,65 @@ export class BaseScene extends Phaser.Scene {
         this.roomWindow.x,
         this.roomWindow.y +
           (this.roomWindow.height * this.roomWindow.scale) / 2 +
+          window.innerHeight / 50,
+        "???",
+        {
+          fontFamily: "Manaspace",
+          fontSize: getFontSize(FontSizes.XSMALL),
+          align: "center",
+          resolution: 20,
+        }
+      )
+      .setOrigin(0.5, 0);
+
+    // projects
+    this.anims.create({
+      key: "balloonatics",
+      frames: this.anims.generateFrameNumbers("balloonatics", {
+        frames: [0, 1],
+      }),
+      frameRate: 1.5,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "bspokr",
+      frames: this.anims.generateFrameNumbers("bspokr", {
+        frames: [0, 1],
+      }),
+      frameRate: 1,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "wistaria",
+      frames: this.anims.generateFrameNumbers("wistaria", {
+        frames: [0, 1],
+      }),
+      frameRate: 1,
+      repeat: -1,
+    });
+
+    this.shelfSmall = this.add
+      .image(
+        center.x -
+          (window.innerWidth < 480
+            ? window.innerWidth * 0.15
+            : this.tv.width + window.innerWidth / 30),
+        center.y - window.innerHeight / 7,
+        "shelfsmall"
+      )
+      .setName("shelfsmall")
+      .setScale(this.tv.scale)
+      .setPipeline(this.grayscalePipeline)
+      .setOrigin(0.5)
+      .setInteractive({
+        useHandCursor: true,
+      });
+
+    this.shelfText = this.add
+      .text(
+        this.shelfSmall.x,
+        this.shelfSmall.y +
+          (this.shelfSmall.height * this.shelfSmall.scale) / 2 +
           window.innerHeight / 50,
         "???",
         {
@@ -329,6 +412,9 @@ export class BaseScene extends Phaser.Scene {
     this.diplomaSmall.on("pointerover", () => {
       this.addGlowToObject(this.diplomaSmall);
     });
+    this.shelfSmall.on("pointerover", () => {
+      this.addGlowToObject(this.shelfSmall);
+    });
     this.roomWindow
       .on("pointerover", () => {
         this.addGlowToObject(this.roomWindow);
@@ -378,9 +464,15 @@ export class BaseScene extends Phaser.Scene {
       if (
         gameObject.name === "tv" ||
         gameObject.name === "diplomasmall" ||
-        gameObject.name === "roomWindow"
+        gameObject.name === "roomWindow" ||
+        gameObject.name === "shelfsmall"
       ) {
         gameObject.postFX.clear();
+
+        // keep shine
+        if (gameObject.name === "diplomasmall") {
+          this.diplomaSmall.postFX.addShine(0.25, 0.25, 5);
+        }
         resetCursor(this);
       }
     });
@@ -468,14 +560,14 @@ export class BaseScene extends Phaser.Scene {
       }
     });
     this.diplomaSmall.on("pointerup", () => {
-      this.diplomaSmall.postFX.clear();
-
       // remove grayscale and show text
       this.diplomaSmall.resetPipeline();
       this.diplomaText.setText("education");
 
       // create and launch interactive diploma
-      createBackButton(this, diplomaBackButton, true);
+      createBackButton(this, diplomaBackButton, {
+        fullBackgroundClickable: true,
+      });
       this.diploma = this.add
         .plane(window.innerWidth / 2, window.innerHeight / 2, "diploma")
         .setInteractive();
@@ -512,6 +604,61 @@ export class BaseScene extends Phaser.Scene {
         });
     });
 
+    this.shelfSmall.on("pointerup", () => {
+      // remove grayscale and show text
+      this.shelfSmall.resetPipeline();
+      this.shelfText.setText("projects");
+
+      createBackButton(this, carouselBackButton, {
+        fullBackgroundClickable: true,
+        color: 0x1c2833,
+        alpha: 0.75,
+      });
+
+      if (!this.projectCarouselCreated) {
+        // spawn project carousel
+        const balloonatics = this.add
+          .sprite(center.x, window.innerHeight * 0.45, "balloonatics")
+          .setName("balloonatics")
+          .setInteractive({
+            useHandCursor: true,
+          })
+          .setData("link", "https://cse125.ucsd.edu/2018/cse125g4/index.html")
+          .play("balloonatics");
+
+        const bspokr = this.add
+          .sprite(center.x, window.innerHeight * 0.45, "bspokr")
+          .setName("bspokr")
+          .setInteractive({
+            useHandCursor: true,
+          })
+          .setData("link", "https://bspokr.onrender.com/")
+          .play("bspokr");
+        const wistaria = this.add
+          .sprite(center.x, window.innerHeight * 0.45, "wistaria")
+          .setName("wistaria")
+          .setInteractive({
+            useHandCursor: true,
+          })
+          .setData("link", "https://wistaria.ink/")
+          .play("wistaria");
+
+        this.projectCarouselGroup = this.add.group([
+          balloonatics,
+          bspokr,
+          wistaria,
+        ]);
+
+        createCarousel(this, this.projectCarouselGroup);
+        this.projectCarouselCreated = true;
+      } else {
+        this.projectCarouselGroup.getChildren().forEach((carouselItem) => {
+          carouselItem.setVisible(true).setDepth(99);
+        });
+        this.carouselText.setVisible(true).setDepth(99);
+      }
+    });
+
     this.baseObjectGroup.addMultiple([
       this.title,
       this.tv,
@@ -520,6 +667,8 @@ export class BaseScene extends Phaser.Scene {
       this.diplomaText,
       this.roomWindow,
       this.windowText,
+      this.shelfSmall,
+      this.shelfText,
       this.github,
       this.linkedin,
     ]);
@@ -577,8 +726,8 @@ export class BaseScene extends Phaser.Scene {
       this.diplomaSmall.setPosition(
         center.x -
           (window.innerWidth < 480
-            ? window.innerWidth / 3
-            : this.tv.width + window.innerWidth / 10),
+            ? window.innerWidth * 0.4
+            : this.tv.width + window.innerWidth / 7),
         center.y - window.innerHeight / 10
       );
       this.diplomaText.setPosition(
@@ -612,6 +761,51 @@ export class BaseScene extends Phaser.Scene {
           (this.roomWindow.height * this.roomWindow.scale) / 2 +
           window.innerHeight / 50
       );
+      this.windowText.setFontSize(getFontSize(FontSizes.XSMALL));
+
+      // shelf
+      this.shelfSmall.setPosition(
+        center.x -
+          (window.innerWidth < 480
+            ? window.innerWidth * 0.15
+            : this.tv.width + window.innerWidth / 30),
+        center.y - window.innerHeight / 7
+      );
+      this.shelfText.setPosition(
+        this.shelfSmall.x,
+        this.shelfSmall.y +
+          (this.shelfSmall.height * this.shelfSmall.scale) / 2 +
+          window.innerHeight / 50
+      );
+      this.shelfText.setFontSize(getFontSize(FontSizes.XSMALL));
+
+      if (this.projectCarouselGroup?.active) {
+        this.projectCarouselGroup.getChildren().forEach((carouselItem) => {
+          carouselItem.y = window.innerHeight * 0.45;
+          const targetX = carouselItem.getData("targetX");
+          carouselItem.x =
+            targetX === -1
+              ? 0 - carouselItem.displayWidth
+              : targetX === 1
+              ? window.innerWidth + carouselItem.displayWidth
+              : window.innerWidth * targetX;
+
+          const displaySize = getCarouselDisplaySize(
+            targetX === 0.5,
+            carouselItem
+          );
+          carouselItem.setDisplaySize(displaySize.width, displaySize.height);
+        });
+
+        this.carouselText.x = window.innerWidth * 0.5;
+        this.carouselText.y = window.innerHeight * 0.9;
+        this.carouselText.setFontSize(getFontSize(FontSizes.MEDIUM));
+      }
+
+      if (this.backButtonFullBackground?.active) {
+        this.backButtonFullBackground.width = window.innerWidth;
+        this.backButtonFullBackground.height = window.innerHeight;
+      }
 
       // icons
       this.github.setPosition(

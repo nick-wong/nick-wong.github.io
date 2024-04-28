@@ -6,6 +6,19 @@ export const getZoom = (width, height, min = 0) => {
   );
 };
 
+export const fitIntoRectangle = (maxWidth, maxHeight, objWidth, objHeight) => {
+  // Scale to maxWidth and then reduce by maxHeight if needed
+  let newWidth = maxWidth;
+  let newHeight = (maxWidth / objWidth) * objHeight;
+
+  if (newHeight > maxHeight) {
+    newHeight = maxHeight;
+    newWidth = (maxHeight / objHeight) * objWidth;
+  }
+
+  return { width: newWidth, height: newHeight };
+};
+
 export const backgroundCover = (width, height) => {
   return Math.max(window.innerWidth / width, window.innerHeight / height);
 };
