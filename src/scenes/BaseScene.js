@@ -25,6 +25,7 @@ import diploma from "../assets/education/diploma.png";
 // icons
 import githubicon from "../assets/icons/github.png";
 import linkedinicon from "../assets/icons/linkedin.png";
+import itchicon from "../assets/icons/itch.png";
 // exp
 import unknownworld from "../assets/experience/unknownworld.png";
 import worldselector from "../assets/experience/worldselector.png";
@@ -105,6 +106,7 @@ export class BaseScene extends Phaser.Scene {
     // icons
     this.load.image("githubicon", githubicon);
     this.load.image("linkedinicon", linkedinicon);
+    this.load.image("itchicon", itchicon);
 
     // exp
     this.load.image("unknownworld", unknownworld);
@@ -370,7 +372,7 @@ export class BaseScene extends Phaser.Scene {
     // icons
     this.github = this.add
       .image(
-        center.x - getWidthOffset(),
+        center.x,
         window.innerHeight > 400
           ? window.innerHeight * 0.8
           : window.innerHeight * 0.9,
@@ -381,6 +383,7 @@ export class BaseScene extends Phaser.Scene {
       .setTint(0xaaaaaa)
       .setInteractive({ useHandCursor: true, pixelPerfect: true })
       .setOrigin(1, 0.5);
+    this.github.x = center.x - this.github.width/2 - getWidthOffset();
     this.github
       .on("pointerover", () => {
         this.github.clearTint();
@@ -391,9 +394,10 @@ export class BaseScene extends Phaser.Scene {
       .on("pointerup", () => {
         window.open("https://github.com/nick-wong", "_blank");
       });
+
     this.linkedin = this.add
       .sprite(
-        center.x + getWidthOffset(),
+        center.x,
         window.innerHeight > 400
           ? window.innerHeight * 0.8
           : window.innerHeight * 0.9,
@@ -404,6 +408,7 @@ export class BaseScene extends Phaser.Scene {
       .setPipeline(this.grayscalePipeline)
       .setOrigin(0, 0.5)
       .setInteractive({ useHandCursor: true, pixelPerfect: true });
+    this.linkedin.x = center.x - getWidthOffset()/2;
     this.linkedin
       .on("pointerover", () => {
         this.linkedin.resetPipeline();
@@ -413,6 +418,31 @@ export class BaseScene extends Phaser.Scene {
       })
       .on("pointerup", () => {
         window.open("https://www.linkedin.com/in/nicholas-k-wong/", "_blank");
+      });
+      
+    this.itch = this.add
+      .sprite(
+        center.x,
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9,
+        "itchicon"
+      )
+      .setName("itchicon")
+      .setScale(this.tv.scale)
+      .setPipeline(this.grayscalePipeline)
+      .setOrigin(0, 0.5)
+      .setInteractive({ useHandCursor: true, pixelPerfect: true });
+    this.itch.x = center.x + this.itch.width * 1.5 + getWidthOffset();
+    this.itch
+      .on("pointerover", () => {
+        this.itch.resetPipeline();
+      })
+      .on("pointerout", () => {
+        this.itch.setPipeline(this.grayscalePipeline);
+      })
+      .on("pointerup", () => {
+        window.open("https://lopsoplo.itch.io/", "_blank");
       });
 
     // events
@@ -693,6 +723,7 @@ export class BaseScene extends Phaser.Scene {
       this.shelfText,
       this.github,
       this.linkedin,
+      this.itch
     ]);
     this.scale.on("resize", this.resize, this);
   }
@@ -831,13 +862,19 @@ export class BaseScene extends Phaser.Scene {
 
       // icons
       this.github.setPosition(
-        center.x - getWidthOffset(),
+        center.x - this.github.width/2 - getWidthOffset(),
         window.innerHeight > 400
           ? window.innerHeight * 0.8
           : window.innerHeight * 0.9
       );
       this.linkedin.setPosition(
-        center.x + getWidthOffset(),
+        center.x - this.linkedin.width/2,
+        window.innerHeight > 400
+          ? window.innerHeight * 0.8
+          : window.innerHeight * 0.9
+      );
+      this.itch.setPosition(
+        center.x + this.itch.width * 1.5 + getWidthOffset(),
         window.innerHeight > 400
           ? window.innerHeight * 0.8
           : window.innerHeight * 0.9
