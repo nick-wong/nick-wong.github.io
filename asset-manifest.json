@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.90769cd2.css",
-    "main.js": "/static/js/main.b8dfb9bd.js",
+    "main.js": "/static/js/main.954f00af.js",
     "static/media/worldbackground.png": "/static/media/worldbackground.3f6750cc5609c6097c00.png",
-    "static/media/worlds.png": "/static/media/worlds.546baeb80f525dde9d16.png",
+    "static/media/worlds.png": "/static/media/worlds.27f87b32b91a2d4308b7.png",
     "static/media/worldpath.png": "/static/media/worldpath.3fca30148c967a1b0016.png",
     "static/media/diploma.png": "/static/media/diploma.cc2fa83f3361ff05d76d.png",
     "static/media/manaspc.ttf": "/static/media/manaspc.0d8565d99646c0054f84.ttf",
@@ -36,10 +36,10 @@
     "static/media/starparticle.png": "/static/media/starparticle.d3f8fe500c5165772689.png",
     "static/media/crosshair.png": "/static/media/crosshair.edc458a79a1bbad3fcdc.png",
     "main.90769cd2.css.map": "/static/css/main.90769cd2.css.map",
-    "main.b8dfb9bd.js.map": "/static/js/main.b8dfb9bd.js.map"
+    "main.954f00af.js.map": "/static/js/main.954f00af.js.map"
   },
   "entrypoints": [
     "static/css/main.90769cd2.css",
-    "static/js/main.b8dfb9bd.js"
+    "static/js/main.954f00af.js"
   ]
 }
