@@ -41,6 +41,7 @@ import worldchevron from "../assets/experience/worldchevron.png";
 import balloonatics from "../assets/projects/balloonatics.png";
 import bspokr from "../assets/projects/bspokr.png";
 import wistaria from "../assets/projects/wistaria.png";
+import starship from "../assets/projects/starship.png";
 
 import { PIPELINE_GRAYSCALE } from "../util/Pipelines";
 import {
@@ -136,6 +137,10 @@ export class BaseScene extends Phaser.Scene {
     this.load.spritesheet("wistaria", wistaria, {
       frameWidth: 108,
       frameHeight: 108,
+    });
+    this.load.spritesheet("starship", starship, {
+      frameWidth: 128,
+      frameHeight: 128,
     });
   }
 
@@ -315,6 +320,14 @@ export class BaseScene extends Phaser.Scene {
     this.anims.create({
       key: "wistaria",
       frames: this.anims.generateFrameNumbers("wistaria", {
+        frames: [0, 1],
+      }),
+      frameRate: 1,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "starship",
+      frames: this.anims.generateFrameNumbers("starship", {
         frames: [0, 1],
       }),
       frameRate: 1,
@@ -642,10 +655,19 @@ export class BaseScene extends Phaser.Scene {
           })
           .setData("link", "https://wistaria.ink/")
           .play("wistaria");
+        const starship = this.add
+          .sprite(center.x, window.innerHeight * 0.45, "starship")
+          .setName("vr starship (pw: email)")
+          .setInteractive({
+            useHandCursor: true,
+          })
+          .setData("link", "https://lopsoplo.itch.io/startup-starship")
+          .play("starship");
 
         this.projectCarouselGroup = this.add.group([
-          balloonatics,
+          starship,
           bspokr,
+          balloonatics,
           wistaria,
         ]);
 
