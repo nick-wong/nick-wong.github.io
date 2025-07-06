@@ -51,8 +51,8 @@ const WORLDS = [
     key: "amazonprimenow",
     frames: [4],
     position: {
-      xOffset: 400,
-      yOffset: -55,
+      xOffset: 405,
+      yOffset: -105,
     },
     world: {
       stars: [1, 2],
@@ -69,13 +69,26 @@ const WORLDS = [
     key: "twitch",
     frames: [5],
     position: {
-      xOffset: 50,
-      yOffset: 40,
+      xOffset: 180,
+      yOffset: 15,
     },
     world: {
       stars: [2],
       title: ["twitch", "[builder products/bat]"],
       info: ["full-stack sde", "internal tools"],
+    },
+  },
+  {
+    key: "alexamobilehome",
+    frames: [6],
+    position: {
+      xOffset: -110,
+      yOffset: 100,
+    },
+    world: {
+      stars: [2],
+      title: ["amazon", "[alexa mobile home]"],
+      info: ["full-stack sde", "alexa+", "for you content tooling"],
     },
   },
 ];

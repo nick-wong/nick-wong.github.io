@@ -332,7 +332,7 @@ export class BaseScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("starship", {
         frames: [0, 1],
       }),
-      frameRate: 1,
+      frameRate: 1.5,
       repeat: -1,
     });
 
@@ -419,7 +419,7 @@ export class BaseScene extends Phaser.Scene {
       .on("pointerup", () => {
         window.open("https://www.linkedin.com/in/nicholas-k-wong/", "_blank");
       });
-      
+
     this.itch = this.add
       .sprite(
         center.x,
@@ -470,9 +470,9 @@ export class BaseScene extends Phaser.Scene {
         const cam = this.cameras.main;
 
         // warp by shake + pan + rotate
-        cam.shake(750, 0.01);
-        cam.pan(this.roomWindow.x, this.roomWindow.y, 750);
-        cam.zoomTo(2, 750);
+        cam.shake(500, 0.01);
+        cam.pan(this.roomWindow.x, this.roomWindow.y, 500);
+        cam.zoomTo(2, 500);
         const warpTween = this.tweens.add({
           targets: cam,
           rotation: 9,
@@ -481,18 +481,19 @@ export class BaseScene extends Phaser.Scene {
         });
         warpTween.on("complete", () => {
           resetCursor(this);
-          this.scene.sleep();
-
-          // launch exp stuff
-          this.scene.isSleeping("SpaceScene")
-            ? this.scene.wake("SpaceScene")
-            : this.scene.launch("SpaceScene");
 
           setTimeout(() => {
+            // launch exp stuff
+            this.scene.isSleeping("SpaceScene")
+              ? this.scene.wake("SpaceScene")
+              : this.scene.launch("SpaceScene");
+
             // reset camera
             cam.setZoom(1);
             cam.setRotation(0);
             cam.setScroll(0);
+
+            this.scene.sleep();
           }, 250);
 
           // remove grayscale and show text
