@@ -1,12 +1,13 @@
 {
   "files": {
     "main.css": "/static/css/main.90769cd2.css",
-    "main.js": "/static/js/main.0d1eca7d.js",
+    "main.js": "/static/js/main.b8dfb9bd.js",
     "static/media/worldbackground.png": "/static/media/worldbackground.3f6750cc5609c6097c00.png",
     "static/media/worlds.png": "/static/media/worlds.546baeb80f525dde9d16.png",
     "static/media/worldpath.png": "/static/media/worldpath.3fca30148c967a1b0016.png",
     "static/media/diploma.png": "/static/media/diploma.cc2fa83f3361ff05d76d.png",
     "static/media/manaspc.ttf": "/static/media/manaspc.0d8565d99646c0054f84.ttf",
+    "static/media/starship.png": "/static/media/starship.8785a943f54665939ca8.png",
     "static/media/duckhuntbg.png": "/static/media/duckhuntbg.71560f9284f700937d10.png",
     "static/media/balloonatics.png": "/static/media/balloonatics.85f25eaaaae1652d05de.png",
     "static/media/akisquirrel.png": "/static/media/akisquirrel.bad71d326ae05a0ce669.png",
@@ -30,14 +31,15 @@
     "static/media/linkedin.png": "/static/media/linkedin.cd64b30a3904439d0609.png",
     "static/media/roundsign.png": "/static/media/roundsign.28d6c76e3cd7c7686258.png",
     "static/media/worldlevelstar.png": "/static/media/worldlevelstar.b16fe1fdbd663c2b1b65.png",
+    "static/media/itch.png": "/static/media/itch.79d538d445204dbd378e.png",
     "static/media/worldchevron.png": "/static/media/worldchevron.9fe13bbd474599f2ec6f.png",
     "static/media/starparticle.png": "/static/media/starparticle.d3f8fe500c5165772689.png",
     "static/media/crosshair.png": "/static/media/crosshair.edc458a79a1bbad3fcdc.png",
     "main.90769cd2.css.map": "/static/css/main.90769cd2.css.map",
-    "main.0d1eca7d.js.map": "/static/js/main.0d1eca7d.js.map"
+    "main.b8dfb9bd.js.map": "/static/js/main.b8dfb9bd.js.map"
   },
   "entrypoints": [
     "static/css/main.90769cd2.css",
-    "static/js/main.0d1eca7d.js"
+    "static/js/main.b8dfb9bd.js"
   ]
 }
