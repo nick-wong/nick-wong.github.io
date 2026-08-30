@@ -433,7 +433,7 @@ export class SpaceScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.LARGE),
           align: "left",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(1, 0.5);
@@ -515,7 +515,7 @@ export class SpaceScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: "12px",
           align: "left",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5, 0.75);
@@ -542,7 +542,7 @@ export class SpaceScene extends Phaser.Scene {
               fontFamily: "Manaspace",
               fontSize: "12px",
               align: "center",
-              resolution: 20,
+              resolution: 3,
             }
           )
           .setOrigin(0.5, 0.35)
@@ -575,7 +575,7 @@ export class SpaceScene extends Phaser.Scene {
             fontFamily: "Manaspace",
             fontSize: getFontSize(FontSizes.XSMALL),
             align: "center",
-            resolution: 20,
+            resolution: 3,
           }
         )
         .setOrigin(0.5, 0.35);

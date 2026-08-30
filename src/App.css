@@ -1,3 +1,16 @@
 .App {
   text-align: center;
 }
+
+#webgl-warning {
+  padding-top: 10vh;
+  text-align: center;
+  font-family: "Manaspace", monospace;
+  background-color: #292929;
+  color: white;
+  min-height: 100vh;
+}
+
+#webgl-warning h1 {
+  margin-top: 0;
+}

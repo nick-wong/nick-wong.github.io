@@ -158,6 +158,16 @@ export class BaseScene extends Phaser.Scene {
     this.scene.launch("BackgroundScene");
     this.scene.sendToBack("BackgroundScene");
 
+    this.linkText = this.add
+      .text(10, window.innerHeight - 10, "", {
+        fontFamily: "Manaspace",
+        fontSize: getFontSize(FontSizes.XXSMALL),
+        resolution: 3,
+      })
+      .setOrigin(0, 1)
+      .setDepth(100)
+      .setVisible(false);
+
     this.title = this.add
       .text(
         center.x,
@@ -169,7 +179,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.MEDIUM),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setName("title")
@@ -218,7 +228,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5, 0);
@@ -254,7 +264,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5, 0);
@@ -297,7 +307,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5, 0);
@@ -364,7 +374,7 @@ export class BaseScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALL),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5, 0);
@@ -387,9 +397,11 @@ export class BaseScene extends Phaser.Scene {
     this.github
       .on("pointerover", () => {
         this.github.clearTint();
+        this.linkText.setText("https://github.com/nick-wong").setVisible(true);
       })
       .on("pointerout", () => {
         this.github.setTint(0xaaaaaa);
+        this.linkText.setVisible(false);
       })
       .on("pointerup", () => {
         window.open("https://github.com/nick-wong", "_blank");
@@ -412,9 +424,11 @@ export class BaseScene extends Phaser.Scene {
     this.linkedin
       .on("pointerover", () => {
         this.linkedin.resetPipeline();
+        this.linkText.setText("https://www.linkedin.com/in/nicholas-k-wong/").setVisible(true);
       })
       .on("pointerout", () => {
         this.linkedin.setPipeline(this.grayscalePipeline);
+        this.linkText.setVisible(false);
       })
       .on("pointerup", () => {
         window.open("https://www.linkedin.com/in/nicholas-k-wong/", "_blank");
@@ -437,9 +451,11 @@ export class BaseScene extends Phaser.Scene {
     this.itch
       .on("pointerover", () => {
         this.itch.resetPipeline();
+        this.linkText.setText("https://lopsoplo.itch.io/").setVisible(true);
       })
       .on("pointerout", () => {
         this.itch.setPipeline(this.grayscalePipeline);
+        this.linkText.setVisible(false);
       })
       .on("pointerup", () => {
         window.open("https://lopsoplo.itch.io/", "_blank");

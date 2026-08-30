@@ -101,7 +101,7 @@ export class TVScene extends Phaser.Scene {
               fontFamily: "Manaspace",
               fontSize: getFontSize(FontSizes.SMALL),
               align: "center",
-              resolution: 20,
+              resolution: 3,
             })
             .setDepth(99)
             .setOrigin(0.5);
@@ -174,7 +174,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 20,
+        resolution: 3,
       })
       .setDepth(100)
       .setOrigin(1);
@@ -184,7 +184,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 20,
+        resolution: 3,
         color: "rgb(255, 102, 0)",
       })
       .setDepth(100)
@@ -214,7 +214,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.SMALL),
         align: "center",
-        resolution: 20,
+        resolution: 3,
       })
       .setDepth(100)
       .setOrigin(0, 0.5);
@@ -238,7 +238,7 @@ export class TVScene extends Phaser.Scene {
         fontFamily: "Manaspace",
         fontSize: getFontSize(FontSizes.MEDIUM),
         align: "center",
-        resolution: 20,
+        resolution: 3,
       })
       .setDepth(100)
       .setOrigin(0.5);
@@ -331,7 +331,7 @@ export class TVScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALLTOSMALL),
           align: "left",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setDepth(100)
@@ -367,7 +367,7 @@ export class TVScene extends Phaser.Scene {
           fontFamily: "Manaspace",
           fontSize: getFontSize(FontSizes.XSMALLTOSMALL),
           align: "center",
-          resolution: 20,
+          resolution: 3,
         }
       )
       .setOrigin(0.5);
@@ -433,7 +433,7 @@ export class TVScene extends Phaser.Scene {
                 fontFamily: "Manaspace",
                 fontSize: getFontSize(FontSizes.SMALL),
                 align: "center",
-                resolution: 20,
+                resolution: 3,
               }
             )
             .setOrigin(0.5)

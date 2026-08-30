@@ -26,7 +26,7 @@ export const createBackButton = (
       fontFamily: "Manaspace",
       fontSize: getFontSize(FontSizes.LARGE),
       align: "center",
-      resolution: 20,
+      resolution: 3,
     })
     .setName("backButton")
     .setDepth(100)
@@ -125,10 +125,12 @@ export const createCarousel = (scene, objs) => {
       .on("pointerover", () => {
         if (obj.name === children[currentObj].name) {
           scene.carouselText.setTint(0xfcc200);
+          scene.linkText.setText(obj.getData("link")).setVisible(true);
         }
       })
       .on("pointerout", () => {
         scene.carouselText.clearTint();
+        scene.linkText.setVisible(false);
       })
       .on("pointerup", () => {
         const objIndex = children.indexOf(obj);
@@ -262,7 +264,7 @@ export const createCarousel = (scene, objs) => {
       fontFamily: "Manaspace",
       fontSize: getFontSize(FontSizes.MEDIUM),
       align: "center",
-      resolution: 20,
+      resolution: 3,
     })
     .setOrigin(0.5, 0);
 };

@@ -7,7 +7,7 @@ import GrayScalePipeline from "./util/Pipelines";
 import { SpaceScene } from "./scenes/SpaceScene";
 
 export const config = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   //parent: "phaser-container",
   scale: {
     parent: "phaser-container",
