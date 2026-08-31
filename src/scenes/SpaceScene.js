@@ -25,8 +25,8 @@ const WORLDS = [
     key: "badg",
     frames: [2],
     position: {
-      xOffset: -200,
-      yOffset: -140,
+      xOffset: -250,
+      yOffset: -130,
     },
     world: {
       stars: [1],
@@ -38,8 +38,8 @@ const WORLDS = [
     key: "amazonfresh",
     frames: [3],
     position: {
-      xOffset: 100,
-      yOffset: -195,
+      xOffset: 30,
+      yOffset: -185,
     },
     world: {
       stars: [1],
@@ -51,8 +51,8 @@ const WORLDS = [
     key: "amazonprimenow",
     frames: [4],
     position: {
-      xOffset: 405,
-      yOffset: -105,
+      xOffset: 305,
+      yOffset: -190,
     },
     world: {
       stars: [1, 2],
@@ -69,8 +69,8 @@ const WORLDS = [
     key: "twitch",
     frames: [5],
     position: {
-      xOffset: 180,
-      yOffset: 15,
+      xOffset: 270,
+      yOffset: -5,
     },
     world: {
       stars: [2],
@@ -82,8 +82,8 @@ const WORLDS = [
     key: "alexamobilehome",
     frames: [6],
     position: {
-      xOffset: -110,
-      yOffset: 100,
+      xOffset: -25,
+      yOffset: 55,
     },
     world: {
       stars: [2],
@@ -91,6 +91,19 @@ const WORLDS = [
       info: ["full-stack sde", "alexa+", "for you content tooling"],
     },
   },
+  {
+    key: "carbonated",
+    frames: [7],
+    position: {
+      xOffset: 45,
+      yOffset: 190,
+    },
+    world: {
+      stars: [2],
+      title: ["carbonated", "[game/tooling backend]"],
+      info: ["senior backend sde", "genai pipeline", "in game audio", "tooling"]
+    }
+  }
 ];
 
 export class SpaceScene extends Phaser.Scene {
